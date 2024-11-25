@@ -28,8 +28,8 @@ export function SalesSection() {
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
             Summer Sale Extravaganza
           </h2>
-          <p className="text-2xl md:text-3xl font-semibold text-foreground/80">
-            Up to <span className="text-primary">30% OFF</span> on Selected Items
+          <p className="text-2xl md:text-3xl font-semibold text-foreground/80 " >
+            Up to <span className="highlight highlight-teal-400 p-2 animate-highlight-fade ">30% OFF</span> on Selected Items
           </p>
         </motion.div>
 
