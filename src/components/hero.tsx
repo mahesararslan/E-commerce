@@ -3,6 +3,7 @@
 import img from "../../public/hero5.jpeg";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import WordFadeIn from "./ui/word-fade-in";
 
 const mottos = [
   "Unleash the Future of Tech",
@@ -54,9 +55,9 @@ export function Hero() {
     >
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <div className="container mx-auto px-4 relative z-10 text-white text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-up">
-          Welcome to DeviceHaven
-        </h1>
+        
+          <WordFadeIn className="text-4xl md:text-6xl font-bold mb-6 animate-fade-up" words="Welcome to DeviceHaven" />
+        
         <p className="text-3xl mb-8 h-16 font-bold animate-type">
           {displayedMotto}
         </p>

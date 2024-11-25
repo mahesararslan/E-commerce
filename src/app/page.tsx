@@ -4,6 +4,7 @@ import { RecentProducts } from "@/components/recent-products"
 import { SalesSection } from "@/components/sales-section"
 import { ProductCarousel } from "@/components/product-carousel"
 import { BrandCarousel } from "@/components/brand-carousel"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
@@ -15,9 +16,7 @@ export default function Home() {
         <BrandCarousel />
         <SalesSection />
       </main>
-      <footer className="bg-muted py-6 text-center">
-        <p>&copy; 2023 DeviceHaven. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   )
 }

@@ -20,6 +20,7 @@ interface ProductCarouselProps {
 export function ProductCarousel({ products }: ProductCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: 'start' })
 
+
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev()
   }, [emblaApi])

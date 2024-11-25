@@ -11,7 +11,7 @@ const products = [
 
 export function RecentProducts() {
   return (
-    <section className="py-20 bg-gradient-to-b from-background via-primary to-background">
+    <section className="py-20 bg-gradient-to-b">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold mb-10 text-center animate-fade-up">Featured Products</h2>
         <ProductCarousel products={products} />
@@ -19,4 +19,41 @@ export function RecentProducts() {
     </section>
   )
 }
+
+
+// import { useEffect, useState } from 'react'
+// import { ProductCarousel } from './product-carousel'
+
+// interface Category {
+//   id: number
+//   name: string
+//   image: string
+//   description: string
+// }
+
+// export function RecentProducts() {
+//   const [categories, setcategories] = useState<Category[]>([])
+
+//   useEffect(()=> {
+//     async function fetchcategories() {
+//       const response = await fetch("/api/categories")
+//       const data = await response.json()
+//       console.log(data)
+//       setcategories(data)
+//     }
+
+//     fetchcategories()
+//   })
+
+//   return (
+//     <section className="py-20 bg-gradient-to-b">
+//       <div className="container mx-auto px-4">
+//         <h2 className="text-3xl font-bold mb-10 text-center animate-fade-up">Featured categories</h2>
+//         <ProductCarousel products={categories} />
+//       </div>
+//     </section>
+//   )
+// }
+
+
 

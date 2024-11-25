@@ -16,7 +16,7 @@ const brands = [
 
 export function BrandCarousel() {
   return (
-    <div className="w-full overflow-hidden bg-gradient-to-r from-background via-primary/5 to-background py-12">
+    <div className="w-full overflow-hidden border-y-2 bg-gradient-to-r from-background via-primary/5 to-background py-12">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-8 text-foreground">Our Trusted Brands</h2>
         <div className="relative">

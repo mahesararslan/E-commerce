@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { MoonIcon, SunIcon, ShoppingCart, Heart, User } from 'lucide-react'
+import { MoonIcon, SunIcon, ShoppingCart, Heart, User, Search } from 'lucide-react'
 import { useTheme } from "next-themes"
 
 export function Navbar() {
@@ -11,13 +11,25 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-16 items-center justify-between pl-4">
         <Link href="/" className="flex items-center space-x-2">
           <span className="text-2xl font-bold">DeviceHaven</span>
         </Link>
-        <div className="hidden md:flex md:w-1/3">
-          <Input type="search" placeholder="Search..." className="w-full" />
-        </div>
+        <form className="hidden md:flex md:w-1/3 relative">
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full pr-10 border-2 border-primary/20 focus-visible:ring-primary"
+          />
+          <Button
+            type="submit"
+            size="sm"
+            className="absolute right-1 top-1/2 transform -translate-y-1/2"
+          >
+            <Search className="h-4 w-4" />
+            <span className="sr-only">Search</span>
+          </Button>
+        </form>
         <div className="flex items-center space-x-4">
           <Link href="/products" className="hidden sm:inline-block">Products</Link>
           <Link href="/wishlist" className="hidden sm:inline-block"><Heart className="h-5 w-5" /></Link>
