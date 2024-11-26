@@ -10,20 +10,23 @@ import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import { Toaster } from '@/components/ui/toaster'
+import { set } from 'mongoose'
 
 export default function VerifyOtp() {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast();
     const router = useRouter();
-    const { email } = useParams();
+    const { email }: { email:string } = useParams();
+    const decodedEmail = decodeURIComponent(email);
+    
 
   const handleOtpComplete = async (otp: string) => {
     setIsLoading(true)
     // Here you would typically send the OTP to your backend for verification
     console.log('OTP submitted:', otp)
     
-    // @ts-ignore Simulating an API call 
-    const response = await axios.post('/api/verify-otp', { email: email, otp })
+    // @ts-ignore
+    const response = await axios.post('/api/verify-otp', { email: decodedEmail, otp })
     if (response.status !== 200) {
       toast({
         title: "Invalid OTP",
@@ -31,6 +34,9 @@ export default function VerifyOtp() {
         variant: "destructive",
       })
       setIsLoading(false)
+      setTimeout(() => {
+        router.push('/signin')
+      }, 2000)
       return
     }
     

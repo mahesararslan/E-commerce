@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     const mailOptions = {
       from: "device-haven@zohomail.com",
       to: email,
-      subject: "New message from your-website",
+      subject: "OTP for account verification",
       html: `<p>Your OTP is: <strong>${otp}</strong>. It will expire in 5 minutes.</p>`,
     };
 

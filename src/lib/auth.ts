@@ -24,7 +24,6 @@ export const authOptions: NextAuthOptions = {
               // validate the credentials
               const user = await User.findOne({
                   email: email,
-                  verified: true
               })
 
               if (!user) {

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
         return new NextResponse("Signed up successfully", { status: 200 });
     }
     catch (error) {
-        console.error(error);
+        console.error(error); // @ts-ignore
         if (error.code === 11000) {
             console.error("Duplicate key error:", error);
             return new NextResponse("Email already exists. Please use a different email.", { status: 409 }); // HTTP 409 Conflict
