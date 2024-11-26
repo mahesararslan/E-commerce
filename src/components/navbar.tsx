@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -18,19 +18,30 @@ import { Sidebar } from './sidebar'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useRouter } from 'next/navigation'
+import axios from 'axios'
 
-
-const categories = [
-  "Smartphones", "Laptops", "Tablets", "Smartwatches", "Headphones", 
-  "Cameras", "TVs", "Gaming Consoles", "Smart Home", "Audio Systems",
-  "Wearables", "Printers", "Monitors", "Networking", "Storage"
-]
+interface Categories {
+  _id: number
+  name: string
+  image: string
+  description: string
+}
 
 export function Navbar() {
   const { setTheme, theme } = useTheme()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { data: session } = useSession()
   const router = useRouter()
+  const [categories, setcategories] = useState<Categories[]>([])
+
+  useEffect(()=> {
+    async function fetchcategories() {
+      const response = await axios.get("/api/categories")
+      setcategories(response.data.categories)
+    }
+
+    fetchcategories()
+  },[]);
 
   return (
     <>
@@ -82,14 +93,14 @@ export function Navbar() {
                 <DropdownMenuContent 
                   className="w-screen max-w-3xl p-4 animate-in slide-in-from-top-5 duration-300"
                 >
-                  <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-3 gap-4">
                     {categories.map((category) => (
-                      <DropdownMenuItem key={category} asChild>
+                      <DropdownMenuItem key={category._id} asChild>
                         <Link 
-                          href={`/category/${category.toLowerCase().replace(' ', '-')}`}
+                          href={`/category/${category.name.toLowerCase().replace(' ', '-')}`}
                           className="hover:bg-primary/10 rounded p-2 transition-colors"
                         >
-                          {category}
+                          {category.name}
                         </Link>
                       </DropdownMenuItem>
                     ))}

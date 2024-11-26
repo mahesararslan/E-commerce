@@ -30,6 +30,10 @@ const customUserSchema = new Schema({
     type: String,
     default: null,
   },
+  verified: {
+    type: Boolean,
+    default: false
+  },
   recentSearches: [
     {
       type: String, 
