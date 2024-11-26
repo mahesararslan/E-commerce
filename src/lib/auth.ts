@@ -2,42 +2,46 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { NextAuthOptions } from "next-auth";
 import { User } from "@/models/user";
+import bcrypt from "bcrypt";
+import { mongooseConnect } from "./mongoose";
 
 export const authOptions: NextAuthOptions = {
     providers: [
       CredentialsProvider({
         name: "Credentials",
         credentials: {
-            username: { label: "Username", type: "text", placeholder: "jsmith" },
+            email: { label: "email", type: "text", placeholder: "js@example.com" },
             password: { label: "Password", type: "password", placeholder: "123" }
         },
         async authorize(credentials: any) {
             console.log(credentials);
+          
+            try {
+              mongooseConnect();
+              const email = credentials.email;
+              const password = credentials.password;
 
-            const username = credentials.username;
-            const password = credentials.password;
+              // validate the credentials
+              const user = await User.findOne({
+                  email: email,
+                  verified: true
+              })
 
-            // validate the credentials
-            const user = await User.findOne({
-                email: username,
-                password: password
-            })
+              if (!user) {
+                  return null;
+              }
 
-            // const user = await prisma.findOne({
-            //     where : {
-            //         username: username,
-            //         password: password
-            //     }
-            // })
+              const isPasswordValid = await bcrypt.compare(password, user.password);
+              
+              if (!isPasswordValid) {
+                  return null;
+              }
 
-            // if(!user) {
-            //     return null; // if null is returned this mean the user has wrong credeadentials
-            // }
-
-            return {
-                id: "user1",
-                name: "Arslan",
-                email: credentials.username
+              return user;
+            }
+            catch (error) {
+                console.error("Error during authorization:", error);
+                return null;
             }
           }
         }),
@@ -88,9 +92,26 @@ export const authOptions: NextAuthOptions = {
           
           return baseUrl;
         },
+        async jwt({ token, user }) {
+            // Add firstName and lastName to the token on sign-in
+            if (user) { // @ts-ignore
+              token.firstName = user.firstName; // @ts-ignore
+              token.lastName = user.lastName;
+            }
+            return token;
+          },
+          async session({ session, token }) {
+            // @ts-ignore Add firstName and lastName to the session object
+            session.user.firstName = token.firstName; // @ts-ignore
+            session.user.lastName = token.lastName;
+            return session;
+          },
     },
     pages: {
         signIn: "/signin",
     },
-    secret: process.env.NEXTAUTH_SECRET || "secret"
+    secret: process.env.NEXTAUTH_SECRET || "secret",
+    session: {
+        strategy: "jwt",
+    },
 };

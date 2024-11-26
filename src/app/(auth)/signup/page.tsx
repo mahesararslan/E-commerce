@@ -12,18 +12,34 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { FcGoogle } from 'react-icons/fc'
 import { signIn } from 'next-auth/react';
+import axios from 'axios'
+import { Toaster } from '@/components/ui/toaster'
+import { useToast } from '@/hooks/use-toast'
+import { useRouter } from 'next/navigation'
+
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
   })
+  const { toast } = useToast();
+  const router = useRouter()
 
   const onSubmit = async (data: SignUpSchema) => {
     setIsLoading(true)
-    // Handle sign-up logic here
+    const reponse = await axios.post('/api/signup', data)
+    if (reponse.status !== 200) {
+      toast({
+        title: "Invalid credentials",
+        description: "Please try again",
+        variant: "destructive",
+      })
+    }
+
     console.log(data)
     setIsLoading(false)
+    router.push(`/verify-otp/${data.email}`)
   }
 
   return (
@@ -99,6 +115,7 @@ export default function SignUp() {
           </Button>
         </motion.div>
       </div>
+      <Toaster />
     </AuthLayout>
   )
 }

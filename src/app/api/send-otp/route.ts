@@ -3,6 +3,8 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import { OTP } from "@/models/otp";
 import { getServerSession } from "next-auth";
+import { mongo } from "mongoose";
+import { mongooseConnect } from "@/lib/mongoose";
 
 const user = process.env.EMAIL;
 const pass = process.env.PASSWORD;
@@ -10,11 +12,19 @@ const pass = process.env.PASSWORD;
 export async function POST(request: Request) {
 
   try {
+    mongooseConnect();
     const { email } = await request.json();
     console.log("Request Received for email sending");
 
       if (!email) {
         return NextResponse.json({ error: "Email is required" }, { status: 400 });
+      }
+
+      // check if an otp has already been generated for the email
+      const existingOtp = await OTP.findOne({ email });
+      if (existingOtp) {
+        console.log("Deleting existing OTP");
+        await OTP.deleteOne({ email }); // 
       }
   
       // Generate a random 6-digit OTP

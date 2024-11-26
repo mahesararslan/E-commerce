@@ -1,9 +1,11 @@
 import { authOptions } from "@/lib/auth";
+import { mongooseConnect } from "@/lib/mongoose";
 import { OTP } from "@/models/otp";
+import { User } from "@/models/user";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
     
     const session = await getServerSession(authOptions);
     if (!session?.user) {
@@ -14,6 +16,7 @@ export default async function POST(req: NextRequest) {
     }
 
     try {
+        mongooseConnect();
         const { email, otp } = await req.json();
         if (!email || !otp) {
             return NextResponse.json({ error: "Email and OTP are required" }, { status: 400 });
@@ -31,6 +34,14 @@ export default async function POST(req: NextRequest) {
         if(otpRecord.otp !== otp) {
             return NextResponse.json({ error: "Invalid OTP" }, { status: 400 });
         }
+
+        
+        await OTP.deleteOne({ email, otp });
+        await User.updateOne({ email },
+            {
+                verified: true
+            }
+        )
 
         return NextResponse.json({ message: "OTP verified successfully" }, { status: 200 });
     }
