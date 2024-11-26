@@ -1,13 +1,19 @@
-"use client"
-
-import { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import { Input } from "@/components/ui/input"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { MoonIcon, SunIcon, Search, Heart, User, ShoppingCart } from 'lucide-react'
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { MoonIcon, SunIcon, ShoppingCart, Heart, User, Search, ChevronDown } from 'lucide-react'
 import { useTheme } from "next-themes"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { useSession, signIn, signOut } from "next-auth/react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const categories = [
   "Smartphones", "Laptops", "Tablets", "Smartwatches", "Headphones", 
@@ -22,91 +28,97 @@ interface SidebarProps {
 
 export function Sidebar({ open, onClose }: SidebarProps) {
   const { setTheme, theme } = useTheme()
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Implement search functionality here
-    console.log('Searching for:', searchQuery)
-    onClose()
-  }
+  const { data: session } = useSession()
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="left" className="w-[300px] sm:w-[400px] overflow-y-auto">
-        <SheetHeader>
+      <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
+        <SheetHeader className="p-4 border-b">
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
-        <div className="py-4">
-          <nav className="space-y-4">
-            <form onSubmit={handleSearch} className="flex space-x-2">
+        <ScrollArea className="h-[calc(100vh-10rem)] pb-10 overflow-y-auto">
+          <div className="flex flex-col p-4 space-y-4">
+            <form className="relative w-full">
               <Input
                 type="search"
                 placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-grow"
+                className="w-full pr-10"
               />
-              <Button type="submit" size="icon">
+              <Button
+                type="submit"
+                size="sm"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2"
+              >
                 <Search className="h-4 w-4" />
                 <span className="sr-only">Search</span>
               </Button>
             </form>
-            <Accordion type="single" collapsible>
+
+            {session ? (
+                <div>
+                  <div className="flex items-center space-x-4 p-2 border rounded-lg">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
+                    <AvatarFallback><User className="h-6 w-6" /></AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{session.user?.name}</p>
+                    <p className="text-xs text-muted-foreground">{session.user?.email}</p>
+                  </div>
+
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => signOut()}>
+                  Sign out
+                </Button>
+                </div>
+            ) : (
+              <Button onClick={() => signIn()} className="w-full">
+                Sign In
+              </Button>
+            )}
+
+            <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="products">
                 <AccordionTrigger>Products</AccordionTrigger>
                 <AccordionContent>
-                  <ul className="space-y-2">
+                  <div className="flex flex-col space-y-2">
                     {categories.map((category) => (
-                      <li key={category}>
-                        <Link
-                          href={`/category/${category.toLowerCase().replace(' ', '-')}`}
-                          className="block py-2 px-4 hover:bg-primary/10 rounded transition-colors"
-                          onClick={onClose}
-                        >
-                          {category}
-                        </Link>
-                      </li>
+                      <Link
+                        key={category}
+                        href={`/category/${category.toLowerCase().replace(' ', '-')}`}
+                        className="text-sm hover:underline"
+                        onClick={onClose}
+                      >
+                        {category}
+                      </Link>
                     ))}
-                  </ul>
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            <Link href="/wishlist" className="flex items-center space-x-2 py-2 px-4 hover:bg-primary/10 rounded transition-colors" onClick={onClose}>
+
+            <Link href="/wishlist" className="flex items-center space-x-2 hover:text-primary transition-colors" onClick={onClose}>
               <Heart className="h-5 w-5" />
               <span>Wishlist</span>
             </Link>
-            <Link href="/profile" className="flex items-center space-x-2 py-2 px-4 hover:bg-primary/10 rounded transition-colors" onClick={onClose}>
-              <User className="h-5 w-5" />
-              <span>Profile</span>
-            </Link>
-            <Link href="/cart" className="flex items-center space-x-2 py-2 px-4 hover:bg-primary/10 rounded transition-colors" onClick={onClose}>
+
+            <Link href="/cart" className="flex items-center space-x-2 hover:text-primary transition-colors" onClick={onClose}>
               <ShoppingCart className="h-5 w-5" />
               <span>Cart</span>
             </Link>
+
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {
-                setTheme(theme === "dark" ? "light" : "dark")
-                onClose()
-              }}
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="w-full justify-start"
             >
-              <SunIcon className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <MoonIcon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="ml-2">Toggle theme</span>
+              <SunIcon className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 mr-2" />
+              <MoonIcon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 mr-2" />
+              <span>{theme === "dark" ? "Light" : "Dark"} mode</span>
             </Button>
-            <div className="space-y-2">
-              <Button variant="outline" className="w-full" asChild>
-                <Link href="/login" onClick={onClose}>Log in</Link>
-              </Button>
-              <Button className="w-full" asChild>
-                <Link href="/signup" onClick={onClose}>Sign up</Link>
-              </Button>
-            </div>
-          </nav>
-        </div>
+          </div>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   )

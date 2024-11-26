@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -11,10 +11,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { Sidebar } from './sidebar'
-import axios from 'axios'
-import Image from 'next/image'
+import { useSession, signIn, signOut } from "next-auth/react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useRouter } from 'next/navigation'
+
 
 const categories = [
   "Smartphones", "Laptops", "Tablets", "Smartwatches", "Headphones", 
@@ -22,26 +26,11 @@ const categories = [
   "Wearables", "Printers", "Monitors", "Networking", "Storage"
 ]
 
-interface Category {
-  _id: number
-  name: string
-  image: string
-  description: string
-}
-
 export function Navbar() {
   const { setTheme, theme } = useTheme()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [categories, setCategories] = useState<Category[]>([])
-
-  useEffect(()=> {
-    async function fetchCategories() {
-      const response = await axios.get("/api/categories")
-      setCategories(response.data.categories)
-    }
-
-    fetchCategories()
-  },[]);
+  const { data: session } = useSession()
+  const router = useRouter()
 
   return (
     <>
@@ -54,7 +43,7 @@ export function Navbar() {
               <span className="sr-only">Open menu</span>
             </Button>
             <Link href="/" className="flex items-center space-x-2">
-              <Image className='inline-block' src="/logo.png" alt="DeviceHaven" width={250} height={250} />
+              <span className="text-2xl font-bold">DeviceHaven</span>
             </Link>
           </div>
 
@@ -64,12 +53,12 @@ export function Navbar() {
               <Input
                 type="search"
                 placeholder="Search..."
-                className="w-full pr-10 border-2 border-stone-400 focus:ring--ring focus-visible:ring--ring "
+                className="w-full pr-10 border-2 border-primary/20 focus-visible:ring-primary"
               />
               <Button
                 type="submit"
                 size="sm"
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-foreground-primary text-black dark:text-white "
+                className="absolute right-1 top-1/2 transform -translate-y-1/2"
               >
                 <Search className="h-4 w-4" />
                 <span className="sr-only">Search</span>
@@ -93,14 +82,14 @@ export function Navbar() {
                 <DropdownMenuContent 
                   className="w-screen max-w-3xl p-4 animate-in slide-in-from-top-5 duration-300"
                 >
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
                     {categories.map((category) => (
-                      <DropdownMenuItem key={category._id} asChild>
+                      <DropdownMenuItem key={category} asChild>
                         <Link 
-                          href={`/category/${category.name.toLowerCase().replace(' ', '-')}`}
+                          href={`/category/${category.toLowerCase().replace(' ', '-')}`}
                           className="hover:bg-primary/10 rounded p-2 transition-colors"
                         >
-                          {category.name}
+                          {category}
                         </Link>
                       </DropdownMenuItem>
                     ))}
@@ -110,9 +99,26 @@ export function Navbar() {
               <Link href="/wishlist" className="hover:text-primary transition-colors">
                 <Heart className="h-5 w-5" />
               </Link>
-              <Link href="/profile" className="hover:text-primary transition-colors">
-                <User className="h-5 w-5" />
-              </Link>
+              {session ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Avatar className="h-8 w-8 cursor-pointer">
+                      <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
+                      <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>{session.user?.name}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => {router.push("/profile")}} >Profile</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => signOut()}>Sign out</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button variant="ghost" asChild>
+                  <Link href="/signin">Sign In</Link>
+                </Button>
+              )}
               <Button
                 variant="ghost"
                 size="icon"
@@ -128,6 +134,7 @@ export function Navbar() {
               <ShoppingCart className="h-6 w-6" />
               <span className="sr-only">View cart</span>
             </Link>
+            
           </div>
         </div>
       </nav>

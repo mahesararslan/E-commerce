@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { FcGoogle } from 'react-icons/fc'
+import { signIn } from 'next-auth/react'
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false)
@@ -70,7 +71,7 @@ export default function SignIn() {
           whileTap={{ scale: 0.95 }}
           className="mt-6"
         >
-          <Button variant="outline" className="w-full" onClick={() => {}}>
+          <Button variant="outline" className="w-full" onClick={() => {signIn("google")}}>
             <FcGoogle className="mr-2 h-4 w-4" /> Google
           </Button>
         </motion.div>
