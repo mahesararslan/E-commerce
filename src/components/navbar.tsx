@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sidebar } from './sidebar'
 import axios from 'axios'
+import Image from 'next/image'
 
 const categories = [
   "Smartphones", "Laptops", "Tablets", "Smartwatches", "Headphones", 
@@ -53,7 +54,7 @@ export function Navbar() {
               <span className="sr-only">Open menu</span>
             </Button>
             <Link href="/" className="flex items-center space-x-2">
-              <span className="text-2xl font-bold">DeviceHaven</span>
+              <Image className='inline-block' src="/logo.png" alt="DeviceHaven" width={250} height={250} />
             </Link>
           </div>
 
