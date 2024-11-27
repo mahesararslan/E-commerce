@@ -67,7 +67,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                   </div>
 
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => signOut()}>
+                <Button variant="ghost" size="lg" onClick={() => signOut()}>
                   Sign out
                 </Button>
                 </div>

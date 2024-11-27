@@ -19,6 +19,8 @@ import { useSession, signIn, signOut } from "next-auth/react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
+import { Logo } from './Logo'
+import Image from 'next/image'
 
 interface Categories {
   _id: number
@@ -30,9 +32,15 @@ interface Categories {
 export function Navbar() {
   const { setTheme, theme } = useTheme()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
   const [categories, setcategories] = useState<Categories[]>([])
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      console.log("User details:", session)
+    }
+  }, [status, session])
 
   useEffect(()=> {
     async function fetchcategories() {
@@ -54,7 +62,7 @@ export function Navbar() {
               <span className="sr-only">Open menu</span>
             </Button>
             <Link href="/" className="flex items-center space-x-2">
-              <span className="text-2xl font-bold">DeviceHaven</span>
+              <Image className='inline-block' src="/logo.png" alt="DeviceHaven" width={250} height={250} />
             </Link>
           </div>
 
@@ -110,16 +118,19 @@ export function Navbar() {
               <Link href="/wishlist" className="hover:text-primary transition-colors">
                 <Heart className="h-5 w-5" />
               </Link>
-              {session ? (
+              {status === "authenticated" ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Avatar className="h-8 w-8 cursor-pointer">
-                      <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
-                      <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
-                    </Avatar>
+                  <Avatar className="h-8 w-8 cursor-pointer">
+                    <AvatarImage src={session?.user?.image || ""} alt={session?.user?.name || ""} />
+                    <AvatarFallback> 
+                      {// @ts-ignore
+                      }{session?.user?.firstName ? session.user.firstName.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
+                    </AvatarFallback>
+                  </Avatar>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>{session.user?.name}</DropdownMenuLabel>
+                    <DropdownMenuLabel>{session?.user?.name || ""}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => {router.push("/profile")}} >Profile</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => signOut()}>Sign out</DropdownMenuItem>

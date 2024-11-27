@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        mongooseConnect();
+        await mongooseConnect();
 
         const response = await User.create({
             firstName,

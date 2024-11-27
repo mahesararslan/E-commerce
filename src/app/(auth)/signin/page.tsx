@@ -12,22 +12,51 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { FcGoogle } from 'react-icons/fc'
 import { signIn } from 'next-auth/react'
+import { useToast } from '@/hooks/use-toast'
+import { Toaster } from '@/components/ui/toaster'
+import { useRouter } from 'next/navigation'
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
   })
+  const { toast } = useToast();
+  const router = useRouter()
 
   const onSubmit = async (data: SignInSchema) => {
     setIsLoading(true)
     // Handle sign-in logic here
-    console.log(data)
-    setIsLoading(false)
+    const response = await signIn('credentials', {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    });
+
+    setIsLoading(false);
+
+    if (response?.error) {
+      // Handle sign-in failure
+      toast({
+        title: 'Sign-in failed',
+        description: 'Invalid credentials. Please try again.',
+        variant: 'destructive',
+      });
+    } else {
+      // Handle successful sign-in
+      toast({
+        title: 'Signed in successfully!',
+        description: 'You have been successfully signed in.',
+      });
+      
+      // Redirect to dashboard or desired page after successful sign-in
+      router.push('/');
+    }
   }
 
   return (
-    <AuthLayout title="Sign In">
+    <>
+      <AuthLayout title="Sign In">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
@@ -77,6 +106,8 @@ export default function SignIn() {
         </motion.div>
       </div>
     </AuthLayout>
+    <Toaster />
+    </>
   )
 }
 

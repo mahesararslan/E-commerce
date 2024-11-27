@@ -19,7 +19,6 @@ const customUserSchema = new Schema({
   password: {
     type: String,
     required: false,
-    select: false, 
   },
   googleId: {
     type: String,

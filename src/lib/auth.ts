@@ -17,7 +17,7 @@ export const authOptions: NextAuthOptions = {
             console.log(credentials);
           
             try {
-              mongooseConnect();
+              await mongooseConnect();
               const email = credentials.email;
               const password = credentials.password;
 
@@ -29,7 +29,8 @@ export const authOptions: NextAuthOptions = {
               if (!user) {
                   return null;
               }
-
+              console.log("User:", user);
+              
               const isPasswordValid = await bcrypt.compare(password, user.password);
               
               if (!isPasswordValid) {
@@ -50,42 +51,50 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: { //@ts-ignore
-        async signIn({ user, profile}) {
-          
-            console.log("signin called");
-            if (!profile || !user.email) {
-                console.log("hi signin false");
-                return false;
-            }
-            // console.log(profile.email);
-            console.log("User: ", user);
-            console.log("Profile: ", profile);
+        async signIn({ user, profile, account}) {
 
-            try {
-              // logic to check if user exists in db and if not, create a new user
-              const existingUser = await User.findOne({ email: user.email });
-              console.log("Existing user:", existingUser);
 
-              if (!existingUser) {
-                console.log("User does not exist in the database. Creating a new user...");
-                const newUser = await User.create({ // @ts-ignore
-                  firstName: profile.given_name || "", // @ts-ignore
-                  lastName: profile.family_name || "",
-                  email: user.email,
-                  googleId: user.id, 
-                  image: user.image,
-                  verified: true,
-                });
-                console.log("New user created:", newUser);
+          if (account && account.provider === "google") {
+                console.log("Google signin called");
+
+
+              if (!profile || !user.email) {
+                  console.log("hi signin false");
+                  return false;
               }
+              // console.log(profile.email);
+              console.log("User: ", user);
+              console.log("Profile: ", profile);
 
-              return true;
+              try {
+                await mongooseConnect();
+                // logic to check if user exists in db and if not, create a new user
+                const existingUser = await User.findOne({ email: user.email });
+                console.log("Existing user:", existingUser);
 
-            }
-            catch (error:any) {
-                console.error("Error during sign-in:", error.msg);
-                return false;
-            }
+                if (!existingUser) {
+                  console.log("User does not exist in the database. Creating a new user...");
+                  const newUser = await User.create({ // @ts-ignore
+                    firstName: profile.given_name || "", // @ts-ignore
+                    lastName: profile.family_name || "",
+                    email: user.email,
+                    googleId: user.id, 
+                    image: user.image,
+                    verified: true,
+                  });
+                  console.log("New user created:", newUser);
+                }
+
+                return true;
+
+              }
+              catch (error:any) {
+                  console.error("Error during sign-in:", error.msg);
+                  return false;
+              }
+          }
+
+          return true; // for all other sign-ins
         },
         async redirect({ url, baseUrl }) {
           

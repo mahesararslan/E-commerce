@@ -12,7 +12,7 @@ const pass = process.env.PASSWORD;
 export async function POST(request: Request) {
 
   try {
-    mongooseConnect();
+    await mongooseConnect();
     const { email } = await request.json();
     console.log("Request Received for email sending");
 

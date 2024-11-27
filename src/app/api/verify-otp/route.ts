@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
 
     try {
-        mongooseConnect();
+        await mongooseConnect();
         const { email, otp } = await req.json();
         if (!email || !otp) {
             return NextResponse.json({ error: "Email and OTP are required" }, { status: 400 });
