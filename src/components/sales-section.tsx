@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Image from 'next/image'
+import { CustomButton } from './CustomButton'
 
 const bestDeals = [
   { id: 1, name: "iPhone 16 Plus", price: 799, discount: 30, image: "/Iphone16.png" },
@@ -29,12 +30,12 @@ export function SalesSection() {
             Summer Sale Extravaganza
           </h2>
           <p className="text-2xl md:text-3xl font-semibold text-foreground/80 " >
-            Up to <span className="highlight highlight-teal-400 p-2 animate-highlight-fade ">30% OFF</span> on Selected Items
+            Up to <span className="highlight highlight-cyan-600 p-2 animate-highlight-fade text-white">30% OFF</span> on Selected Items
           </p>
         </motion.div>
 
         <div className="mb-12">
-          <h3 className="text-2xl font-bold mb-6 text-foreground">Best Deals</h3>
+          <h3 className="text-2xl font-bold mb-6 text-foreground text-center">Best Deals</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {bestDeals.map((deal, index) => (
               <motion.div
@@ -55,7 +56,7 @@ export function SalesSection() {
                         height={200}
                         className="w-full object-cover"
                       />
-                      <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm font-semibold">
+                      <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm font-bold text-white">
                         {deal.discount}% OFF
                       </div>
                     </div>
@@ -72,7 +73,7 @@ export function SalesSection() {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button className="w-full" variant={hoveredDeal === deal.id ? "default" : "outline"}>
+                    <Button className="w-full text-white" variant={hoveredDeal === deal.id ? "default" : "outline"}>
                       Add to Cart
                     </Button>
                   </CardFooter>
@@ -88,9 +89,9 @@ export function SalesSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <Button size="lg" variant="default">
+          <CustomButton url="/sale" >
             View All Deals
-          </Button>
+          </CustomButton>
         </motion.div>
       </div>
     </section>

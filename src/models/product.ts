@@ -26,6 +26,13 @@ const ProductSchema = new Schema({
         ref: 'Category',
         required: true
     },
+    isOnSale: {
+        type: Boolean,
+        default: false
+    },
+    salePrice: {
+        type: Number
+    }
 })
 
 export const Product = models.Product || model('Product', ProductSchema)

@@ -13,7 +13,7 @@
       --popover: 0 0% 100%;
       --popover-foreground: 222.2 84% 4.9%;
   
-      --primary: 176.7 69.5% 41.2%;
+      --primary: 191 93% 36%;
       --primary-foreground: 210 40% 98%;
   
       --secondary: 210 40% 96.1%;
@@ -45,7 +45,7 @@
       --popover: 222.2 84% 4.9%;
       --popover-foreground: 210 40% 98%;
   
-      --primary: 176.7 69.5% 41.2%;
+      --primary: 191 93% 36%;
       --primary-foreground: 222.2 47.4% 11.2%;
   
       --secondary: 217.2 32.6% 17.5%;
@@ -135,5 +135,13 @@
         transform: translateX(-50%);
       }
     }
+
+    .transition-all {
+      transition-property: all;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 150ms;
+    }
+
+    
   }
 
