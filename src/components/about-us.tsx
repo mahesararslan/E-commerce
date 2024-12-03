@@ -1,20 +1,24 @@
+import { CustomButton } from "./hero";
+
 export default function AboutUs() {
 
     return (
         <div>
-            <section className="py-14 lg:py-24 relative z-0 bg-gray-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
-            <h1
-                className="max-w-2xl mx-auto text-center font-manrope font-bold text-4xl  text-gray-900 mb-5 md:text-5xl md:leading-normal">
-                Control your Finances with our <span className="text-primary">Smart Tool </span>
-            </h1>
-            <p className="max-w-sm mx-auto text-center text-base font-normal leading-7 text-gray-500 mb-9">Invest
-                intelligently
-                and discover a better way to manage your entire wealth easily.</p>
-
-
-        </div>
-    </section>
+            <section className="h-screen py-14 lg:py-24 relative z-0 bg-gray-50 bg-cover bg-center bg-no-repeat lg:overflow-hidden"
+                style={{ backgroundImage: `url(/about-us-cover.jpg)` }}
+            >
+                <div 
+                    className="absolute inset-0 bg-black bg-opacity-50 z-[-1]" 
+                    aria-hidden="true"
+                ></div>
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center mt-28 sm:mt-36 lg:mt-0 ">
+                    <h1
+                        className="max-w-2xl mx-auto text-center font-manrope font-bold text-4xl text-white mb-5 md:text-5xl md:leading-normal glow-text">
+                        Discover Innovation with <span className="glow-text ">DeviceHaven</span>
+                    </h1>
+                    <button className=" bg-gradient-to-br from-cyan-200 via-cyan-700 to-cyan-900 group-hover:opacity-100 text-lg font-semibold px-5 py-2 text-white rounded-xl hover:bg-cyan-500 hover:opacity-90 " >Contact Us</button>
+                </div>
+            </section>
 
     <section className="py-14 lg:py-24 relative">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative ">
@@ -26,7 +30,7 @@ export default function AboutUs() {
                 <div className="lg:pl-[100px] flex items-center">
                     <div className="data w-full">
                         <h2
-                            className="font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center relative">
+                            className="font-manrope font-bold text-4xl lg:text-5xl text-foreground mb-9 max-lg:text-center relative">
                             About
                             Us </h2>
                         <p className="font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto">
@@ -48,9 +52,9 @@ export default function AboutUs() {
 
                 <div className="lg:pr-24 flex items-center">
                     <div className="data w-full">
-                        <img src="/about-us-3.png" alt="About Us tailwind page"
+                        <img src="/about-us-4.jpeg" alt="About Us tailwind page"
                             className="block lg:hidden mb-9 mx-auto object-cover" />
-                        <h2 className="font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center">We
+                        <h2 className="font-manrope font-bold text-4xl lg:text-5xl text-foreground mb-9 max-lg:text-center">We
                             are Creative Since 2005</h2>
                         <p className="font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto">
                             DeviceHaven isn’t just a collection of components and guidelines; it's a philosophy. We go
@@ -78,12 +82,11 @@ export default function AboutUs() {
                     className="w-full max-lg:max-w-2xl mx-auto lg:mx-0 lg:w-1/3 bg-white p-6 rounded-2xl shadow-md shadow-gray-100">
                     <div className="flex gap-5">
                         <div className="font-manrope text-2xl font-bold text-primary">
-                            240%
+                            100K+
                         </div>
                         <div className="flex-1">
-                            <h4 className="text-xl text-gray-900 font-semibold mb-2">Company growth</h4>
-                            <p className="text-xs text-gray-500 leading-5">Company's remarkable growth journey as we
-                                continually innovate and drive towards new heights of success.</p>
+                            <h4 className="text-xl text-gray-900 font-semibold mb-2">Happy Customers</h4>
+                            <p className="text-xs text-gray-500 leading-5">Join a growing community of satisfied customers who trust us for quality devices and exceptional service.</p>
                         </div>
                     </div>
                 </div>
@@ -91,12 +94,11 @@ export default function AboutUs() {
                     className="w-full max-lg:max-w-2xl mx-auto lg:mx-0 lg:w-1/3 bg-white p-6 rounded-2xl shadow-md shadow-gray-100">
                     <div className="flex gap-5">
                         <div className="font-manrope text-2xl font-bold text-primary">
-                            175+
+                            125+
                         </div>
                         <div className="flex-1">
-                            <h4 className="text-xl text-gray-900 font-semibold mb-2">Company growth</h4>
-                            <p className="text-xs text-gray-500 leading-5">Our very talented team members are the powerhouse
-                                of DeviceHaven and pillars of our success. </p>
+                            <h4 className="text-xl text-gray-900 font-semibold mb-2">Brands Available</h4>
+                            <p className="text-xs text-gray-500 leading-5">Explore a wide selection of top-rated brands, offering the latest and most trusted devices to meet all your needs. </p>
                         </div>
                     </div>
                 </div>
@@ -104,12 +106,11 @@ export default function AboutUs() {
                     className="w-full max-lg:max-w-2xl mx-auto lg:mx-0 lg:w-1/3 bg-white p-6 rounded-2xl shadow-md shadow-gray-100">
                     <div className="flex gap-5">
                         <div className="font-manrope text-2xl font-bold text-primary">
-                            625+
+                            95%
                         </div>
                         <div className="flex-1">
-                            <h4 className="text-xl text-gray-900 font-semibold mb-2">Projects Completed</h4>
-                            <p className="text-xs text-gray-500 leading-5">We have accomplished more than 625 projects
-                                worldwide and we are still counting many more.</p>
+                            <h4 className="text-xl text-gray-900 font-semibold mb-2">Satisfaction Rate</h4>
+                            <p className="text-xs text-gray-500 leading-5">Our commitment to quality and service ensures customer satisfaction, reflecting trust and excellence in every purchase.</p>
                         </div>
                     </div>
                 </div>
@@ -120,7 +121,7 @@ export default function AboutUs() {
     <section className="py-14 lg:py-24 ">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-24">
-                <h2 className="font-manrope text-4xl text-center font-bold text-gray-900 mb-6">Meet our soldier of finance
+                <h2 className="font-manrope text-4xl text-center font-bold text-foreground mb-6">Meet our soldier of finance
                 </h2>
                 <p className="text-lg text-gray-500 text-center">We provide all the advantage that can simplify all your
                     financial and banking support without any further issues</p>
@@ -137,8 +138,8 @@ export default function AboutUs() {
                             </div>
                             <div className="text-center lg:text-left lg:max-w-xs flex-1">
                                 <div className="mb-5 pb-5 border-b border-solid border-gray-300">
-                                    <h6 className="text-lg text-gray-900 font-semibold mb-1">Harsh Patel</h6>
-                                    <span className="text-sm text-gray-500 group-hover:text-indigo-600">Co-Founder &
+                                    <h6 className="text-lg text-foreground font-semibold mb-1">Harsh Patel</h6>
+                                    <span className="text-sm text-gray-500 group-hover:text-cyan-700">Co-Founder &
                                         CEO</span>
                                 </div>
                                 <p className="text-gray-500 leading-6 mb-7">
@@ -147,7 +148,7 @@ export default function AboutUs() {
                                 </p>
                                 <div className="flex items-center gap-4 justify-center lg:justify-start">
                                     <p
-                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-indigo-600">
+                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-cyan-700">
                                         <svg className="w-5 h-5" width="32" height="32" viewBox="0 0 32 32" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -156,7 +157,7 @@ export default function AboutUs() {
                                         </svg>
                                     </p>
                                     <p
-                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-indigo-600">
+                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-cyan-700">
                                         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -165,7 +166,7 @@ export default function AboutUs() {
                                         </svg>
                                     </p>
                                     <p
-                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-indigo-600">
+                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-cyan-700">
                                         <svg className="w-5 h-5" viewBox="0 0 20 19" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -186,8 +187,8 @@ export default function AboutUs() {
                             </div>
                             <div className="text-center lg:text-left lg:max-w-xs flex-1">
                                 <div className="mb-5 pb-5 border-b border-solid border-gray-300">
-                                    <h6 className="text-lg text-gray-900 font-semibold mb-1">Harsh Patel</h6>
-                                    <span className="text-sm text-gray-500 group-hover:text-indigo-600">Co-Founder &
+                                    <h6 className="text-lg text-foreground font-semibold mb-1">Sheldon Cooper</h6>
+                                    <span className="text-sm text-gray-500 group-hover:text-cyan-700">Co-Founder &
                                         COO</span>
                                 </div>
                                 <p className="text-gray-500 leading-6 mb-7">
@@ -196,7 +197,7 @@ export default function AboutUs() {
                                 </p>
                                 <div className="flex items-center gap-4 justify-center lg:justify-start">
                                     <p
-                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-indigo-600">
+                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-cyan-700">
                                         <svg className="w-5 h-5" width="32" height="32" viewBox="0 0 32 32" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -205,7 +206,7 @@ export default function AboutUs() {
                                         </svg>
                                     </p>
                                     <p
-                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-indigo-600">
+                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-cyan-700">
                                         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -214,7 +215,7 @@ export default function AboutUs() {
                                         </svg>
                                     </p>
                                     <p
-                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-indigo-600">
+                                        className="cursor-pointer  text-gray-900 hover:text-white group w-12 h-12 rounded-full flex justify-center items-center bg-gray-100 transition-all duration-500 hover:bg-cyan-700">
                                         <svg className="w-5 h-5" viewBox="0 0 20 19" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -236,11 +237,11 @@ export default function AboutUs() {
             <div className="bg-primary rounded-2xl p-8 xl:p-11">
                 <h2 className="font-manrope text-4xl text-white text-center font-bold mb-4">Subscribe to the latest offer
                 </h2>
-                <p className="text-indigo-200 text-center mb-11 max-lg:max-w-2xl mx-auto">Join our community of subscribers
+                <p className="text-white-200 text-center mb-11 max-lg:max-w-2xl mx-auto">Join our community of subscribers
                     and receive regular
                     updates delivered straight to your inbox. It's quick, easy, and free</p>
                 <div
-                    className="max-w-md mx-auto lg:bg-transparent lg:border border-gray-300 rounded-3xl max-lg:py-3 lg:rounded-full lg:h-12 lg:p-1.5 lg:flex-row gap-6 lg:gap-0 flex-col flex items-center justify-between">
+                    className="max-w-md mx-auto lg:bg-transparent lg:bg-cyan-800 lg:border border-gray-300 rounded-3xl max-lg:py-3 lg:rounded-full lg:h-12 lg:p-1.5 lg:flex-row gap-6 lg:gap-0 flex-col flex items-center justify-between">
                     <input type="text" name="email" 
                         className="py-2 px-6 bg-transparent rounded-full max-lg:border border-gray-300  text-gray-100 max-lg:text-center placeholder:text-gray-400 focus:outline-none flex-1 w-full lg:w-auto lg:py-2 lg:px-6 lg:bg-transparent"
                         placeholder="Enter your email.." />
