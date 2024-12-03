@@ -1,6 +1,8 @@
-import { CustomButton } from "./hero";
+"use client"
+import { useRouter } from "next/navigation";
 
 export default function AboutUs() {
+    const router = useRouter();
 
     return (
         <div>
@@ -16,7 +18,11 @@ export default function AboutUs() {
                         className="max-w-2xl mx-auto text-center font-manrope font-bold text-4xl text-white mb-5 md:text-5xl md:leading-normal glow-text">
                         Discover Innovation with <span className="glow-text ">DeviceHaven</span>
                     </h1>
-                    <button className=" bg-gradient-to-br from-cyan-200 via-cyan-700 to-cyan-900 group-hover:opacity-100 text-lg font-semibold px-5 py-2 text-white rounded-xl hover:bg-cyan-500 hover:opacity-90 " >Contact Us</button>
+                    <button className=" bg-gradient-to-br from-cyan-200 via-cyan-700 to-cyan-900 group-hover:opacity-100 text-lg font-semibold px-5 py-2 text-white rounded-xl hover:bg-cyan-500 hover:opacity-90 "
+                     onClick={() => {
+                        router.push("/contact-us")
+                     }}
+                     >Contact Us</button>
                 </div>
             </section>
 
