@@ -10,11 +10,11 @@ const categories = [
 ]
 
 const pages = [
-  { name: "About Us", href: "/about" },
-  { name: "Contact", href: "/contact" },
+  { name: "About Us", href: "/about-us" },
+  { name: "Contact", href: "/contact-us" },
   { name: "FAQ", href: "/faq" },
-  { name: "Privacy Policy", href: "/privacy" },
-  { name: "Terms of Service", href: "/terms" },
+  { name: "Privacy Policy", href: "/privacy-policy" },
+  { name: "Terms of Service", href: "/terms-of-service" },
 ]
 
 export function Footer() {
@@ -72,7 +72,7 @@ export function Footer() {
                 placeholder="Enter your email" 
                 className="bg-primary-foreground text-fg-on-primary focus:ring-primary focus:border-primary"    
               />
-              <Button type="submit" variant="outline" className='bg-primary text-white'>
+              <Button type="submit" variant="outline" className='bg-primary text-white hover:bg-cyan-800 hover:text-white'>
                 Subscribe
               </Button>
             </form>

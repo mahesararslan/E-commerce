@@ -2,24 +2,29 @@ import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/product";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+// get products of a specific category.
+export async function GET_category(req: NextRequest) {
+    console.log("GET_category");
     try {
         await mongooseConnect();
 
-        const products = await Product.find({});
+        const url = new URL(req.url);
+        const category = url.searchParams.get('category');
+        console.log("Category: ", category);
         
+
+        const products = await Product.find({ category });
+        console.log("Products: ", products);
         return NextResponse.json({
             status: 200,
             products
         })
     }
-    catch (error) {
-        console.error("Error: ", error);
+    catch (e) {
+        console.error("Error: ", e);
         return NextResponse.json({
             status: 500,
             message: "Error connecting to MongoDB"
         });
     }
 }
-
-// get the products of a specific category

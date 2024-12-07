@@ -21,20 +21,17 @@ import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import { Logo } from './Logo'
 import Image from 'next/image'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
-interface Categories {
-  _id: number
-  name: string
-  image: string
-  description: string
-}
 
 export function Navbar() {
   const { setTheme, theme } = useTheme()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { data: session, status } = useSession()
   const router = useRouter()
-  const [categories, setcategories] = useState<Categories[]>([])
+  const categories = useSelector((state: RootState) => state.category.categories);
+  console.log("Categories: ",categories) 
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -42,14 +39,9 @@ export function Navbar() {
     }
   }, [status, session])
 
-  useEffect(()=> {
-    async function fetchcategories() {
-      const response = await axios.get("/api/categories")
-      setcategories(response.data.categories)
-    }
-
-    fetchcategories()
-  },[]);
+  if (!categories || categories.length === 0) {
+    return <div>Loading Categories...</div>; // Placeholder content
+  }
 
   return (
     <>

@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { ProductCarousel } from './product-carousel'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
 interface Category {
   _id: number
@@ -12,16 +14,7 @@ interface Category {
 }
 
 export function RecentProducts() {
-  const [categories, setcategories] = useState<Category[]>([])
-
-  useEffect(()=> {
-    async function fetchcategories() {
-      const response = await axios.get("/api/categories")
-      setcategories(response.data.categories)
-    }
-
-    fetchcategories()
-  },[]);
+  const categories = useSelector((state: RootState) => state.category.categories);
 
   return (
     <section className="py-20 bg-gradient-to-b">
