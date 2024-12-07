@@ -15,6 +15,7 @@ import { setProducts } from "@/store/slices/productSlice";
 import { RootState } from "@/store/store";
 import { setCategories } from "@/store/slices/categorySlice";
 import { set } from "mongoose";
+import TopProducts from "@/components/top-products";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -53,6 +54,7 @@ export default function Home() {
         <RecentProducts />
         <BrandCarousel />
         <FeaturedProducts />
+        <TopProducts />
         <SalesSection />
         <AboutUsShort />
       </main>

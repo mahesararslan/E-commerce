@@ -6,13 +6,6 @@ import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 
-interface Category {
-  _id: number
-  name: string
-  image: string
-  description: string
-}
-
 export function RecentProducts() {
   const categories = useSelector((state: RootState) => state.category.categories);
 

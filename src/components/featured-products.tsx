@@ -12,8 +12,8 @@ export function FeaturedProducts() {
   const router = useRouter();
 
   return (
-    <section className="py-16 bg-gradient-to-b from-background to-muted">
-      <h1 className="text-4xl font-bold text-center mb-10">Featured Products</h1>
+    <section className="py-16 bg-gradient-to-b from-background to-muted/30">
+      <h1 className="text-4xl font-bold text-center mb-10">Why Choose us</h1>
       <div className="flex items-center justify-center">
       <div className="grid grid-cols-1 gap-10 md:gap-5 lg:gap-10 md:grid-cols-3 ">
         
