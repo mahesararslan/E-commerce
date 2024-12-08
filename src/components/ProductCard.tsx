@@ -21,6 +21,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, index }: ProductCardProps) {
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}

@@ -125,9 +125,6 @@ export function FeaturedProducts() {
         </div>
       </div>
     </div>
-    <div className='w-full flex justify-center items-center mt-10' >
-      <CustomButton url="/products" >All Products</CustomButton>
-    </div>
     </section>
   )
 }

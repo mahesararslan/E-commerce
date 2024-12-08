@@ -9,7 +9,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <Provider store={store} >
+        <Navbar />
           {children}
+        <Footer />
       </Provider>
     </div>
   );

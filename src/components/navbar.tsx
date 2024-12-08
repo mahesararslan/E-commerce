@@ -39,10 +39,6 @@ export function Navbar() {
     }
   }, [status, session])
 
-  if (!categories || categories.length === 0) {
-    return <div>Loading Categories...</div>; // Placeholder content
-  }
-
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -97,7 +93,7 @@ export function Navbar() {
                     {categories.map((category) => (
                       <DropdownMenuItem key={category._id} asChild>
                         <Link 
-                          href={`/category/${category.name.toLowerCase().replace(' ', '-')}`}
+                          href={`/category/${category._id}`}
                           className="hover:bg-primary/10 rounded p-2 transition-colors"
                         >
                           {category.name}
