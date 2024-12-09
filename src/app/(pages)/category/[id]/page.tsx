@@ -9,6 +9,7 @@ import { ProductCard } from "@/components/product-card"
 import { Pagination } from "@/components/pagination"
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver"
 import axios from 'axios'
+import Link from 'next/link'
 
 const ITEMS_PER_PAGE = 6
 
@@ -27,7 +28,7 @@ export default function CategoryPage() {
       const response2 = await axios.get(`/api/categories/${id}`)
       setCategoryName(response2.data.category.name)
       setLoading(false)
-      
+
     }
 
     fetchProducts();
@@ -72,14 +73,16 @@ export default function CategoryPage() {
                   animate={isIntersecting ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <ProductCard
-                    id={product.id}
-                    name={product.name}
-                    price={product.price}
-                    salePrice={product.salePrice}
-                    images={product.images}
-                    rating={4 + Math.random()}
-                  />
+                  <Link href={`/product/${product._id}`} className='cursor-pointer'>
+                    <ProductCard
+                      id={product._id}
+                      name={product.name}
+                      price={product.price}
+                      salePrice={product.salePrice}
+                      images={product.images}
+                      rating={4 + Math.random()}
+                    />
+                  </Link>
                 </motion.div>
               ))}
             </div>

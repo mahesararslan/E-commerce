@@ -1,7 +1,7 @@
 "use client";
 
 import { Hero } from "@/components/hero"
-import { RecentProducts } from "@/components/recent-products"
+import { Categories } from "@/components/categories"
 import { SalesSection } from "@/components/sales-section"
 import { BrandCarousel } from "@/components/brand-carousel"
 import { FeaturedProducts } from "@/components/featured-products"
@@ -48,7 +48,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
         <Hero />
-        <RecentProducts />
+        <Categories />
         <BrandCarousel />
         <FeaturedProducts />
         <TopProducts />

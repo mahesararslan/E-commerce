@@ -7,6 +7,8 @@ import ProductCard from './product-card-2'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { CustomButton } from './CustomButton'
+import { Button } from './ui/button'
+import Link from 'next/link'
 
 // interface Product {
 //   _id: number
@@ -56,26 +58,28 @@ export default function ProductCarousel() {
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
             {products.map((product: any, index: number) => (
-              <div key={product._id} className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] md:flex-[0_0_33.333%] lg:flex-[0_0_25%] p-4">
+              <Link href={`/product/${product._id}`} key={product._id} className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] md:flex-[0_0_33.333%] lg:flex-[0_0_25%] p-4 cursor-pointer">
                 <ProductCard product={product} rating={ratings[index]} />
-              </div>
+              </Link>
             ))}
           </div>
         </div>
-        <button
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md z-10"
-          onClick={scrollPrev}
-          disabled={!prevBtnEnabled}
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button
-          className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md z-10"
-          onClick={scrollNext}
-          disabled={!nextBtnEnabled}
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
+        <Button
+        variant="outline"
+        size="icon"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-background/80 backdrop-blur-sm"
+        onClick={scrollPrev}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-primary/80 backdrop-blur-sm"
+        onClick={scrollNext}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </Button>
       </div>
       <div className='w-full flex justify-center items-center mt-10' >
       <CustomButton url="/products" >All Products</CustomButton>

@@ -13,13 +13,14 @@ interface ProductInfoProps {
     name: string
     description: string
     price: number
-    rating: number
+    rating?: number
   }
   session: Session | null
 }
 
 export function ProductInfo({ product, session }: ProductInfoProps) {
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(1) // @ts-ignore
+  const Rating: number = product.rating ? product.rating.toFixed(1): Number((4 + Math.random()).toFixed(1))
 
   const incrementQuantity = () => setQuantity(prev => prev + 1)
   const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1))
@@ -38,8 +39,8 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">{product.name}</h1>
       <div className="flex items-center space-x-2">
-        <StarRating rating={product.rating} />
-        <span className="text-sm text-muted-foreground">({product.rating.toFixed(1)})</span>
+        <StarRating rating={Rating} />
+        <span className="text-sm text-muted-foreground">({product.rating ? product.rating.toFixed(1): (4 + Math.random()).toFixed(1)})</span>
       </div>
       <p className="text-xl font-semibold">${product.price.toFixed(2)}</p>
       <p className="text-muted-foreground">{product.description}</p>

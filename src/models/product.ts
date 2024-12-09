@@ -32,7 +32,33 @@ const ProductSchema = new Schema({
     },
     salePrice: {
         type: Number
-    }
+    },
+    rating: {
+        type: Number,
+        default: 4.5
+    },
+    reviews: [
+        {
+            userName: {
+                type: String,
+                required: true
+            },
+            rating: {
+                type: Number,
+                required: true,
+                min: 1,
+                max: 5
+            },
+            review: {
+                type: String,
+                required: true
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ]
 })
 
 export const Product = models.Product || model('Product', ProductSchema)

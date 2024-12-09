@@ -6,10 +6,9 @@ import { useSession } from 'next-auth/react'
 import { ProductImage } from '@/components/ProductImage'
 import { ProductInfo } from '@/components/ProductInfo'
 import { ReviewSection } from '@/components/ReviewSection'
-import { SimilarProducts } from '@/components/SimilarProducts'
-import { Navbar } from '@/components/navbar'
-import { Footer } from '@/components/Footer'
+import { SimilarProducts } from '@/components/SimilarProducts' // Ensure this path is correct or update it to the correct path
 import { Skeleton } from '@/components/ui/skeleton'
+import axios from 'axios'
 
 interface Product {
   id: string
@@ -17,7 +16,7 @@ interface Product {
   description: string
   price: number
   images: string[]
-  rating: number
+  rating?: number
   category: string
 }
 
@@ -31,9 +30,9 @@ export default function ProductPage() {
     const fetchProduct = async () => {
       setIsLoading(true)
       try {
-        const res = await fetch(`/api/products/${id}`)
-        const data = await res.json()
-        setProduct(data)
+        const res = await axios.get(`/api/product/${id}`)
+        setProduct(res.data.product)
+        console.log("Product: ",product)
       } catch (error) {
         console.error('Error fetching product:', error)
       } finally {
@@ -56,7 +55,6 @@ export default function ProductPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           <ProductImage images={product.images} />
@@ -65,7 +63,6 @@ export default function ProductPage() {
         <ReviewSection productId={product.id} session={session} />
         <SimilarProducts category={product.category} currentProductId={product.id} />
       </main>
-      <Footer />
     </div>
   )
 }
@@ -73,7 +70,6 @@ export default function ProductPage() {
 function ProductPageSkeleton() {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           <Skeleton className="aspect-square w-full" />
@@ -88,7 +84,6 @@ function ProductPageSkeleton() {
         <Skeleton className="h-64 w-full mb-16" />
         <Skeleton className="h-64 w-full" />
       </main>
-      <Footer />
     </div>
   )
 }

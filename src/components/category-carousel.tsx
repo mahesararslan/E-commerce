@@ -17,7 +17,7 @@ interface ProductCarouselProps {
   products: Product[]
 }
 
-export function ProductCarousel({ products }: ProductCarouselProps) {
+export function CategoryCarousel({ products }: ProductCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: 'start' })
 
 
