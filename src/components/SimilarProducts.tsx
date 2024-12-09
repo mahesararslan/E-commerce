@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import axios from 'axios'
 
 interface Product {
-  id: string
+  _id: string
   name: string
   price: number
   images: string[]
@@ -26,7 +26,8 @@ export function SimilarProducts({ category, currentProductId }: SimilarProductsP
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start', containScroll: 'trimSnaps' })
-  const filteredProducts = products.filter((product) => product.id !== currentProductId)
+  const [filteredProducts, setFilteredProducts] = useState<Product []>()
+  
 
   useEffect(() => {
     const fetchSimilarProducts = async () => {
@@ -34,6 +35,9 @@ export function SimilarProducts({ category, currentProductId }: SimilarProductsP
       try {
         const res = await axios.get(`/api/products/${category}`)
         setProducts(res.data.products)
+      
+        setFilteredProducts(res.data.products.filter((product: Product) => product._id !== currentProductId))
+
       } catch (error) {
         console.error('Error fetching similar products:', error)
       } finally {
@@ -56,8 +60,8 @@ export function SimilarProducts({ category, currentProductId }: SimilarProductsP
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-3xl font-bold text-center ">Similar Products</h2>
+    <div className="space-y-4 mt-10">
+      <h2 className="text-4xl font-bold text-center mb-10">Similar Products</h2>
       <div className="relative">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">

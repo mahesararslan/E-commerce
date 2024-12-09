@@ -11,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import axios from 'axios'
 
 interface Product {
-  id: string
+  _id: string
   name: string
   description: string
   price: number
@@ -60,8 +60,8 @@ export default function ProductPage() {
           <ProductImage images={product.images} />
           <ProductInfo product={product} session={session} />
         </div>
-        <ReviewSection productId={product.id} session={session} />
-        <SimilarProducts category={product.category} currentProductId={product.id} />
+        <ReviewSection productId={product._id} session={session} />
+        <SimilarProducts category={product.category} currentProductId={product._id} />
       </main>
     </div>
   )

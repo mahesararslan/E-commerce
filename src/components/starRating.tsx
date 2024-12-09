@@ -1,4 +1,5 @@
 import { Star, StarHalf } from 'lucide-react'
+import { useEffect } from 'react'
 
 interface StarRatingProps {
   rating: number
@@ -19,7 +20,7 @@ export function StarRating({ rating }: StarRatingProps) {
           return <Star key={i} className="w-4 h-4 text-gray-300" />
         }
       })}
-      <span className="ml-1 text-sm text-muted-foreground">{rating.toFixed(1)}</span>
+      {/* <span className="ml-1 text-sm text-muted-foreground">{rating ? Number(rating.toFixed(1)) : 4}</span>   */}
     </div>
   )
 }

@@ -9,7 +9,7 @@ import { Heart, ShoppingCart, Plus, Minus } from 'lucide-react'
 
 interface ProductInfoProps {
   product: {
-    id: string
+    _id: string
     name: string
     description: string
     price: number
@@ -40,7 +40,7 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
       <h1 className="text-3xl font-bold">{product.name}</h1>
       <div className="flex items-center space-x-2">
         <StarRating rating={Rating} />
-        <span className="text-sm text-muted-foreground">({product.rating ? product.rating.toFixed(1): (4 + Math.random()).toFixed(1)})</span>
+        {/* <span className="text-sm text-muted-foreground">({product.rating ? product.rating.toFixed(1): (4 + Math.random()).toFixed(1)})</span> */}
       </div>
       <p className="text-xl font-semibold">${product.price.toFixed(2)}</p>
       <p className="text-muted-foreground">{product.description}</p>
@@ -59,8 +59,8 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
         </Button>
       </div>
       <div className="flex space-x-4">
-        <Button className="flex-1" onClick={addToCart}>
-          <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+        <Button className="flex-1 text-white font-semibold" onClick={addToCart}>
+          <ShoppingCart className="mr-2 h-4 w-4 text-white" /> Add to Cart
         </Button>
         <Button variant="outline" onClick={addToWishlist}>
           <Heart className="mr-2 h-4 w-4" /> Wishlist
