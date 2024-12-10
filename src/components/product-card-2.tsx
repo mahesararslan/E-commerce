@@ -83,7 +83,7 @@
   export default function ProductCard({ product, rating }: ProductCardProps) {
     return (
       <div className="p-[3px] relative rounded-[32px] bg-gradient-to-r from-teal-600 to-cyan-600 h-full">
-        <div className="relative rounded-[32px] dark:bg-[#1a1a1a] bg-background p-4 h-full flex flex-col">
+        <div className="relative rounded-[32px] dark:bg-[#1a1a1a] bg-background px-4 py-8  h-full flex flex-col">
           <div className="relative mb-4">
             <button className="absolute right-2 top-2 z-10">
               <Heart className="w-6 h-6 text-gray-400" />

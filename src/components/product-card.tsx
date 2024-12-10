@@ -14,7 +14,7 @@ interface ProductCardProps {
   rating: number
 }
 
-export function ProductCard({ id, name, price, salePrice, images, rating }: ProductCardProps) {
+export function ProductCard({ id, name, price, salePrice, images, rating }: any) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const nextImage = () => {

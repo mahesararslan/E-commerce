@@ -8,7 +8,7 @@ import axios from 'axios'
 import { CustomButton } from './CustomButton'
 import { useRouter } from 'next/navigation'
 
-export function FeaturedProducts() {
+export function WhyChooseUs() {
   const router = useRouter();
 
   return (
@@ -18,7 +18,7 @@ export function FeaturedProducts() {
       <div className="grid grid-cols-1 gap-10 md:gap-5 lg:gap-10 md:grid-cols-3 ">
         
         <div
-          className="group relative items-center justify-center overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-black/30 transition-shadow"
+          className="group relative items-center justify-center overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-black/30 transition-shadow rounded-sm"
         >
           
           <div className="h-[50vh] w-[70vw] md:w-[30vw]">
@@ -57,7 +57,7 @@ export function FeaturedProducts() {
         </div>
 
         <div
-          className="group relative items-center justify-center overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-black/30 transition-shadow"
+          className="group relative items-center justify-center overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-black/30 transition-shadow rounded-sm"
         >
           <div className="h-[50vh] w-[70vw] md:w-[30vw]">
             <img
@@ -91,7 +91,7 @@ export function FeaturedProducts() {
         </div>
 
         <div
-          className="group relative items-center justify-center overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-black/30 transition-shadow"
+          className="group relative items-center justify-center overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-black/30 transition-shadow rounded-sm"
         >
           <div className="h-[50vh] w-[70vw] md:w-[30vw]">
             <img
