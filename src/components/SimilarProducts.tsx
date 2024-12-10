@@ -1,3 +1,4 @@
+
 // @ts-nocheck
 'use client'
 
@@ -66,7 +67,7 @@ export function SimilarProducts({ category, currentProductId }: SimilarProductsP
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
             {filteredProducts.map((product: Product) => (
-              <div key={product._id} className="flex-[0_0_25%] min-w-0 px-2"> 
+              <div key={product._id} className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_33.33%] lg:flex-[0_0_25%] min-w-0 px-2"> 
                 <ProductCard product={product} />
               </div>
             ))}
@@ -109,4 +110,5 @@ function SimilarProductsSkeleton() {
     </div>
   )
 }
+
 
