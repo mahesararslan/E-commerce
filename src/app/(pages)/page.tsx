@@ -15,7 +15,6 @@ import { setCategories } from "@/store/slices/categorySlice";
 import { TopProducts } from "@/components/top-products";
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
   const products = useSelector((state: RootState) => state.product.products);
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.category.categories);
@@ -38,11 +37,8 @@ export default function Home() {
         dispatch(setCategories(data.categories));
       };
       fetchCategories();
-      setLoading(false);
     }
   }, [dispatch, categories.length]);
-
-  if (loading) return <div>Loading...</div>
 
   return (
     <div className="min-h-screen flex flex-col">

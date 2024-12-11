@@ -73,7 +73,7 @@ export function SalesSection() {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button className="w-full text-foreground hover:text-white" variant={hoveredDeal === deal.id ? "default" : "outline"}>
+                    <Button className={hoveredDeal === deal.id ? "w-full text-white" : "w-full text-foreground hover:text-white"} variant={hoveredDeal === deal.id ? "default" : "outline"}>
                       Add to Cart
                     </Button>
                   </CardFooter>

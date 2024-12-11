@@ -32,6 +32,21 @@ const customUserSchema = new Schema({
   recentSearches: [
     {
       type: String, 
+      default: []
+    },
+  ],
+  wishlist: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+      default: [],
+    },
+  ],
+  cart: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+      default: [],
     },
   ],
 });

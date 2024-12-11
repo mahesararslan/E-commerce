@@ -103,15 +103,17 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user }) {
             // Add firstName and lastName to the token on sign-in
             if (user) { // @ts-ignore
-              token.firstName = user.firstName; // @ts-ignore
-              token.lastName = user.lastName;
+              token.id = user._id || user.id; // @ts-ignore
+              token.firstName = user.firstName || ""; // @ts-ignore
+              token.lastName = user.lastName || "";
             }
             return token;
           },
           async session({ session, token }) {
             // @ts-ignore Add firstName and lastName to the session object
             session.user.firstName = token.firstName; // @ts-ignore
-            session.user.lastName = token.lastName;
+            session.user.lastName = token.lastName; // @ts-ignore
+            session.user.id = token.id;
             return session;
           },
     },
