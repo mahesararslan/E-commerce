@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Session } from 'next-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { StarRating } from '@/components/starRating'
 import { Heart, ShoppingCart, Plus, Minus } from 'lucide-react'
+import axios from 'axios'
 
 interface ProductInfoProps {
   product: {
@@ -21,6 +22,62 @@ interface ProductInfoProps {
 export function ProductInfo({ product, session }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1) // @ts-ignore
   const Rating: number = product.rating ? product.rating.toFixed(1): Number((4 + Math.random()).toFixed(1))
+  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  // const displayRating = product.rating || 4 + Math.random();
+
+  useEffect(() => {
+    console.log('session:', session);
+    const fetchWishlist = async () => { // @ts-ignore
+      if (session?.user?.id) {
+        try { // @ts-ignore
+          const response = await axios.get(`/api/user`);
+          if (response.data.wishlist) {
+            setWishlist(response.data.wishlist);
+          }
+          else {
+            setWishlist([]);
+          }
+          
+        } catch (error) {
+          console.error('Error fetching wishlist:', error);
+        }
+      }
+    };
+
+    fetchWishlist();
+  }, [session]);
+
+  useEffect(() => {
+    setIsWishlisted(wishlist.includes(product._id));
+  }, [wishlist, product._id]);
+
+  const addToWishlist = async () => {
+    try { // @ts-ignore
+      await axios.post(`/api/user/wishlist`, { productId: _id });
+      setWishlist((prevWishlist) => [...prevWishlist, product._id]);
+    } catch (error) {
+      console.error('Error adding to wishlist:', error);
+    }
+  };
+
+  const removeFromWishlist = async () => {
+    try { // @ts-ignore
+      await axios.delete(`/api/user/wishlist/${product._id}`);
+      setWishlist((prevWishlist) => prevWishlist.filter((id) => id !== product._id));
+    } catch (error) {
+      console.error('Error removing from wishlist:', error);
+    }
+  };
+
+  const toggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent Link navigation
+    if (isWishlisted) {
+      removeFromWishlist();
+    } else {
+      addToWishlist();
+    }
+  };
 
   const incrementQuantity = () => setQuantity(prev => prev + 1)
   const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1))
@@ -28,11 +85,6 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
   const addToCart = () => {
     // Implement add to cart functionality
     console.log(`Added ${quantity} of ${product.name} to cart`)
-  }
-
-  const addToWishlist = () => {
-    // Implement add to wishlist functionality
-    console.log(`Added ${product.name} to wishlist`)
   }
 
   return (
@@ -63,7 +115,7 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
           <ShoppingCart className="mr-2 h-4 w-4 text-white" /> Add to Cart
         </Button>
         <Button variant="outline" onClick={addToWishlist}>
-          <Heart className="mr-2 h-4 w-4" /> Wishlist
+          <Heart className="mr-2 h-4 w-4" /> {isWishlisted ? "Remove" : "Wishlist"}
         </Button>
       </div>
     </div>
