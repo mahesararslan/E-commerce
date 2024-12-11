@@ -103,23 +103,30 @@ export function ReviewSection({ productId, session }: ReviewSectionProps) {
         </form>
       )}
       <div className="space-y-6">
-        {reviews.length > 0 ? (
-          reviews.map((review, index) => (
-            <div key={index} className="border-b pb-4">
-              <div className="flex items-center justify-between">
-                <p className="font-semibold">{review.userName}</p>
-                <StarRating rating={review.rating} />
-              </div>
-              <p className="text-muted-foreground mt-2">{review.review}</p>
-              <p className="text-sm text-muted-foreground mt-2">
-                {new Date(review.createdAt).toLocaleDateString()}
-              </p>
+  {reviews.length > 0 ? (
+    reviews.map((review, index) => (
+      <div key={index} className="border-b pb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            {/* Avatar */}
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-cyan-700 text-white font-semibold">
+              {review.userName.charAt(0).toUpperCase()}
             </div>
-          ))
-        ) : (
-          <div>No reviews yet</div>
-        )}
+            <p className="font-semibold">{review.userName}</p>
+          </div>
+          <StarRating rating={review.rating} />
+        </div>
+        <p className="text-muted-foreground mt-2 italic">{review.review}</p>
+        <p className="text-sm text-muted-foreground mt-2">
+          {new Date(review.createdAt).toLocaleDateString()}
+        </p>
       </div>
+    ))
+  ) : (
+    <div>No reviews yet</div>
+  )}
+</div>
+
     </div>
   );
 }
