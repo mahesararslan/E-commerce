@@ -54,7 +54,7 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
 
   const addToWishlist = async () => {
     try { // @ts-ignore
-      await axios.post(`/api/user/wishlist`, { productId: _id });
+      await axios.post(`/api/user/wishlist`, { productId: product._id });
       setWishlist((prevWishlist) => [...prevWishlist, product._id]);
     } catch (error) {
       console.error('Error adding to wishlist:', error);
@@ -114,7 +114,7 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
         <Button className="flex-1 text-white font-semibold" onClick={addToCart}>
           <ShoppingCart className="mr-2 h-4 w-4 text-white" /> Add to Cart
         </Button>
-        <Button variant="outline" onClick={addToWishlist}>
+        <Button variant="outline" onClick={toggleWishlist}>
           <Heart className="mr-2 h-4 w-4" /> {isWishlisted ? "Remove" : "Wishlist"}
         </Button>
       </div>
