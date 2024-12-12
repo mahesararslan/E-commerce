@@ -7,6 +7,10 @@ import { Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { addToWishlist, removeFromWishlist, setWishlist } from '@/store/slices/wishlistSlice'
+import { useFetchWishlist } from '@/hooks/useFetchWishlist';
 
 interface TopProductCardProps {
   _id: string;
@@ -19,50 +23,30 @@ interface TopProductCardProps {
 export function TopProductCard({ _id, name, price, images, rating }: TopProductCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [wishlist, setWishlist] = useState<string[]>([]);
+  const { wishlist, loading } = useFetchWishlist()
+  const dispatch = useDispatch();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const displayRating = rating || 4 + Math.random();
   const { data: session } = useSession();
 
   useEffect(() => {
-    console.log('session:', session);
-    const fetchWishlist = async () => { // @ts-ignore
-      if (session?.user?.id) {
-        try { // @ts-ignore
-          const response = await axios.get(`/api/user`);
-          if (response.data.wishlist) {
-            setWishlist(response.data.wishlist);
-          }
-          else {
-            setWishlist([]);
-          }
-          
-        } catch (error) {
-          console.error('Error fetching wishlist:', error);
-        }
-      }
-    };
-
-    fetchWishlist();
-  }, [session]);
-
-  useEffect(() => {
-    setIsWishlisted(wishlist.includes(_id));
+    if(wishlist.length !== 0 && session?.user?.email) {
+      setIsWishlisted(wishlist.includes(_id));
+    }
   }, [wishlist, _id]);
 
-  const addToWishlist = async () => {
+  const addsToWishlist = async () => {
     try { // @ts-ignore
-      await axios.post(`/api/user/wishlist`, { productId: _id });
-      setWishlist((prevWishlist) => [...prevWishlist, _id]);
+       // @ts-ignore
+      dispatch(addToWishlist(_id));
     } catch (error) {
       console.error('Error adding to wishlist:', error);
     }
   };
 
-  const removeFromWishlist = async () => {
-    try { // @ts-ignore
-      await axios.delete(`/api/user/wishlist/${_id}`);
-      setWishlist((prevWishlist) => prevWishlist.filter((id) => id !== _id));
+  const removesFromWishlist = async () => {
+    try { 
+      dispatch(removeFromWishlist(_id));
     } catch (error) {
       console.error('Error removing from wishlist:', error);
     }
@@ -71,9 +55,9 @@ export function TopProductCard({ _id, name, price, images, rating }: TopProductC
   const toggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent Link navigation
     if (isWishlisted) {
-      removeFromWishlist();
+      removesFromWishlist();
     } else {
-      addToWishlist();
+      addsToWishlist();
     }
   };
 

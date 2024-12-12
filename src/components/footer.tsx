@@ -4,10 +4,8 @@ import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
-
-const categories = [
-  "Smartphones", "Laptops", "Tablets", "Smartwatches", "Headphones", "Cameras", "Gaming", "TVs"
-]
+import { useFetchCategories } from '@/hooks/useFetchCategories'
+import { useEffect } from 'react'
 
 const pages = [
   { name: "About Us", href: "/about-us" },
@@ -18,6 +16,9 @@ const pages = [
 ]
 
 export function Footer() {
+  const { categories, loading } = useFetchCategories();
+
+
   return (
     <footer className="bg-gradient-to-r from-background via-primary/5 to-background text-foreground">
       <div className="container mx-auto px-4 py-12">
@@ -26,9 +27,9 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4">Categories</h3>
             <ul className="space-y-2">
               {categories.map((category) => (
-                <li key={category}>
-                  <Link href={`/category/${category.toLowerCase()}`} className="hover:underline">
-                    {category}
+                <li key={category._id}>
+                  <Link href={`/category/${category._id}`} className="hover:underline">
+                    {category.name}
                   </Link>
                 </li>
               ))}

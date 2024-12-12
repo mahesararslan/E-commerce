@@ -14,12 +14,8 @@ import {
 } from "@/components/ui/accordion"
 import { useSession, signIn, signOut } from "next-auth/react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useFetchCategories } from '@/hooks/useFetchCategories'
 
-const categories = [
-  "Smartphones", "Laptops", "Tablets", "Smartwatches", "Headphones", 
-  "Cameras", "TVs", "Gaming Consoles", "Smart Home", "Audio Systems",
-  "Wearables", "Printers", "Monitors", "Networking", "Storage"
-]
 
 interface SidebarProps {
   open: boolean
@@ -29,6 +25,7 @@ interface SidebarProps {
 export function Sidebar({ open, onClose }: SidebarProps) {
   const { setTheme, theme } = useTheme()
   const { data: session } = useSession()
+  const { categories, loading } = useFetchCategories();
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -84,12 +81,12 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                   <div className="flex flex-col space-y-2">
                     {categories.map((category) => (
                       <Link
-                        key={category}
-                        href={`/category/${category.toLowerCase().replace(' ', '-')}`}
+                        key={category._id}
+                        href={`/category/${category._id}`}
                         className="text-sm hover:underline"
                         onClick={onClose}
                       >
-                        {category}
+                        {category.name}
                       </Link>
                     ))}
                   </div>

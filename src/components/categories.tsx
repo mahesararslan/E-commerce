@@ -5,9 +5,10 @@ import { CategoryCarousel } from './category-carousel'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import { useFetchCategories } from '@/hooks/useFetchCategories'
 
 export function Categories() {
-  const categories = useSelector((state: RootState) => state.category.categories);
+  const { categories, loading } = useFetchCategories(); 
 
   return (
     <section className="py-20 bg-gradient-to-b">

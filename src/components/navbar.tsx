@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -18,11 +18,11 @@ import { Sidebar } from './sidebar'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
 import { Logo } from './Logo'
 import Image from 'next/image'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store/store'
+import { useFetchWishlist } from '@/hooks/useFetchWishlist'
+import { useFetchProducts } from '@/hooks/useFetchProducts'
+import { useFetchCategories } from '@/hooks/useFetchCategories'
 
 
 export function Navbar() {
@@ -30,14 +30,9 @@ export function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { data: session, status } = useSession()
   const router = useRouter()
-  const categories = useSelector((state: RootState) => state.category.categories);
-  console.log("Categories: ",categories) 
-
-  useEffect(() => {
-    if (status === "authenticated") {
-      console.log("User details:", session)
-    }
-  }, [status, session])
+  const {categories} = useFetchCategories();
+  const { products } = useFetchProducts();
+  const { wishlist } = useFetchWishlist();
 
   return (
     <>
@@ -103,8 +98,13 @@ export function Navbar() {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Link href="/wishlist" className="hover:text-primary transition-colors">
+              <Link href="/wishlist" className="relative inline-block hover:text-primary transition-colors">
                 <Heart className="h-5 w-5" />
+                {wishlist.length > 0 && (
+                  <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                    {wishlist.length > 5 ? '5+' : wishlist.length}
+                  </span>
+                )}
               </Link>
               {status === "authenticated" ? (
                 <DropdownMenu>

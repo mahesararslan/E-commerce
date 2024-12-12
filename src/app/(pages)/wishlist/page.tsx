@@ -7,11 +7,11 @@ import { motion } from 'framer-motion'
 import { WishlistCard } from "@/components/WishlistCard"
 import { useSession } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 
 interface Product {
-  id: string
+  _id: string
   name: string
   price: number
   salePrice?: number
@@ -22,33 +22,47 @@ interface Product {
 export default function WishlistPage() {
   const [wishlistProducts, setWishlistProducts] = useState<Product[]>([])
   const products = useSelector((state: RootState) => state.product.products)
+  const wishlist = useSelector((state: RootState) => state.wishlist.items);
+  // const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true)
   const { data: session } = useSession()
   const { toast } = useToast()
 
   useEffect(() => {
-    const fetchWishlistProducts = async () => { // @ts-ignore
-      if (session?.user?.id) {
-        try { 
-          const response = await axios.get(`/api/user`)
-          const filteredProducts = products.filter((product: any) => 
-            response.data.wishlist.includes(product._id)
-          )
-          setWishlistProducts(filteredProducts)
-        } catch (error) {
-          console.error('Error fetching wishlist products:', error)
-          toast({
-            title: "Error",
-            description: "Failed to fetch wishlist products. Please try again.",
-            variant: "destructive",
-          })
-        } finally {
-          setIsLoading(false)
+      const fetchWishlistProducts = async () => { // @ts-ignore
+        if (session?.user) {      
+          try { 
+            let filteredProducts = []
+            if (wishlist.length === 0) {
+              const response = await axios.get(`/api/user`)
+              filteredProducts = products.filter((product: any) => 
+                response.data.wishlist.includes(product._id)
+              )
+            }
+            else {
+              console.log("Wishlist: ", wishlist)
+              console.log("Products: ", products)
+              filteredProducts = products.filter((product: any) => 
+                wishlist.includes(product._id)
+              ) 
+            }
+            console.log("Filtered products: ", filteredProducts)
+            setWishlistProducts(filteredProducts)
+          } catch (error) {
+            console.error('Error fetching wishlist products:', error)
+            toast({
+              title: "Error",
+              description: "Failed to fetch wishlist products. Please try again.",
+              variant: "destructive",
+            })
+          } finally {
+            setIsLoading(false)
+          }
         }
       }
-    }
-
-    fetchWishlistProducts()
+  
+      fetchWishlistProducts()
+    
   }, [session, toast])
 
   
@@ -86,7 +100,7 @@ export default function WishlistPage() {
             </motion.h1>
             {isLoading ? (
               <p className="text-center">Loading your wishlist...</p>
-            ) : wishlistProducts.length === 0 ? (
+            ) : wishlist.length === 0 ? (
               <p className="text-center">Your wishlist is empty.</p>
             ) : (
               <div className="space-y-4">
