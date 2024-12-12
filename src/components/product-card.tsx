@@ -1,9 +1,15 @@
-import { useState } from 'react'
+"use client"
+
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { StarRating } from './starRating'
 import { Button } from '@/components/ui/button'
 import { Heart, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import { useFetchWishlist } from '@/hooks/useFetchWishlist'
+import { useDispatch } from 'react-redux'
+import { addToWishlist, removeFromWishlist } from '@/store/slices/wishlistSlice'
 
 interface ProductCardProps {
   id: string
@@ -16,6 +22,42 @@ interface ProductCardProps {
 
 export function ProductCard({ id, name, price, salePrice, images, rating }: any) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const { data: session } = useSession();
+  const { wishlist, loading } = useFetchWishlist()
+  const dispatch = useDispatch();
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  
+    useEffect(() => {
+      if(wishlist.length !== 0 && session?.user?.email) {
+        setIsWishlisted(wishlist.includes(id));
+      }
+    }, [wishlist, id]);
+  
+    const addsToWishlist = async () => {
+      try { // @ts-ignore
+         // @ts-ignore
+        dispatch(addToWishlist(id));
+      } catch (error) {
+        console.error('Error adding to wishlist:', error);
+      }
+    };
+  
+    const removesFromWishlist = async () => {
+      try { 
+        dispatch(removeFromWishlist(id));
+      } catch (error) {
+        console.error('Error removing from wishlist:', error);
+      }
+    };
+  
+    const toggleWishlist = (e: React.MouseEvent) => {
+      e.preventDefault(); // Prevent Link navigation
+      if (isWishlisted) {
+        removesFromWishlist();
+      } else {
+        addsToWishlist();
+      }
+    };
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
@@ -80,9 +122,9 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
           <ShoppingCart className="w-4 h-4 mr-2 " />
           Add to Cart
         </Button>
-        <Button size="sm" variant="outline" className="w-[48%]">
+        <Button onClick={toggleWishlist} size="sm" variant="outline" className="w-[48%]">
           <Heart className="w-4 h-4 mr-2" />
-          Wishlist
+          {isWishlisted ? 'Remove' : 'Wishlist'}
         </Button>
       </div>
     </motion.div>

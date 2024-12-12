@@ -1,44 +1,51 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import axios from 'axios'
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 interface WishlistState {
-  items: string[]
+  items: string[];
 }
 
 const initialState: WishlistState = {
   items: [],
-}
+};
 
+// Thunks for async actions
+export const addToWishlistAsync = createAsyncThunk(
+  'wishlist/addToWishlist',
+  async (productId: string, { dispatch }) => {
+    console.log('Adding to wishlist:', productId);
+    await axios.post(`/api/user/wishlist`, { productId });
+    dispatch(addToWishlist(productId)); // Dispatch the synchronous reducer
+  }
+);
+
+export const removeFromWishlistAsync = createAsyncThunk(
+  'wishlist/removeFromWishlist',
+  async (productId: string, { dispatch }) => {
+    console.log('Removing from wishlist:', productId);
+    await axios.delete(`/api/user/wishlist/${productId}`);
+    dispatch(removeFromWishlist(productId)); // Dispatch the synchronous reducer
+  }
+);
+
+// Slice
 const wishlistSlice = createSlice({
   name: 'wishlist',
   initialState,
   reducers: {
     addToWishlist: (state, action: PayloadAction<string>) => {
       if (!state.items.includes(action.payload)) {
-        async function UpdateWishlist() {
-          console.log("Adding to wishlist: ", action.payload)
-          await axios.post(`/api/user/wishlist`, { productId: action.payload });
-          state.items.push(action.payload)
-        }
-
-        UpdateWishlist();
+        state.items.push(action.payload);
       }
     },
     removeFromWishlist: (state, action: PayloadAction<string>) => {
-      async function updateWishlist() {
-        console.log("Removing from wishlist: ", action.payload)
-        await axios.delete(`/api/user/wishlist/${action.payload}`);
-        state.items = state.items.filter(id => id !== action.payload)
-      }
-
-      updateWishlist();
+      state.items = state.items.filter((id) => id !== action.payload);
     },
     setWishlist: (state, action: PayloadAction<string[]>) => {
-      console.log("Setting wishlist: ", action.payload)
-      state.items = action.payload
+      state.items = action.payload;
     },
   },
-})
+});
 
-export const { addToWishlist, removeFromWishlist, setWishlist } = wishlistSlice.actions
-export default wishlistSlice.reducer
+export const { addToWishlist, removeFromWishlist, setWishlist } = wishlistSlice.actions;
+export default wishlistSlice.reducer;
