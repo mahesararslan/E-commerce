@@ -28,7 +28,6 @@ export function ProductFilters({ onSortChange, onSaleFilterChange }: ProductFilt
           id="sale-only"
           checked={saleOnly}
           onCheckedChange={(checked) => {
-            alert("checked")
             setSaleOnly(checked)
             onSaleFilterChange(checked)
           }}
