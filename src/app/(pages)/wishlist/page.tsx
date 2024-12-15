@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import { removeFromWishlistAsync } from '@/store/slices/wishlistSlice'
 
 interface Product {
   _id: string
@@ -23,7 +24,7 @@ export default function WishlistPage() {
   const [wishlistProducts, setWishlistProducts] = useState<Product[]>([])
   const products = useSelector((state: RootState) => state.product.products)
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true)
   const { data: session } = useSession()
   const { toast } = useToast()
@@ -78,7 +79,7 @@ export default function WishlistPage() {
 
   const handleRemoveFromWishlist = async (id) => {
     try { 
-      await axios.delete(`/api/user/wishlist/${id}`);
+      dispatch(removeFromWishlistAsync(id));
       setWishlistProducts((prevWishlist) => prevWishlist.filter((prod) => prod._id !== id));
     } catch (error) {
       console.error('Error removing from wishlist:', error);

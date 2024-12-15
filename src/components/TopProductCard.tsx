@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { addToWishlist, removeFromWishlist, setWishlist } from '@/store/slices/wishlistSlice'
+import { addToWishlistAsync, removeFromWishlistAsync } from '@/store/slices/wishlistSlice'
 import { useFetchWishlist } from '@/hooks/useFetchWishlist';
 
 interface TopProductCardProps {
@@ -37,16 +37,15 @@ export function TopProductCard({ _id, name, price, images, rating }: TopProductC
 
   const addsToWishlist = async () => {
     try { // @ts-ignore
-       // @ts-ignore
-      dispatch(addToWishlist(_id));
+      dispatch(addToWishlistAsync(_id));
     } catch (error) {
       console.error('Error adding to wishlist:', error);
     }
   };
 
   const removesFromWishlist = async () => {
-    try { 
-      dispatch(removeFromWishlist(_id));
+    try { // @ts-ignore
+      dispatch(removeFromWishlistAsync(_id));
     } catch (error) {
       console.error('Error removing from wishlist:', error);
     }

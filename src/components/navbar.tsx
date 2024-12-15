@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -23,6 +23,10 @@ import Image from 'next/image'
 import { useFetchWishlist } from '@/hooks/useFetchWishlist'
 import { useFetchProducts } from '@/hooks/useFetchProducts'
 import { useFetchCategories } from '@/hooks/useFetchCategories'
+import { RecentSearches } from './RecentSearches'
+import { useFetchRecentSearches } from '@/hooks/useFetchRecentSearches'
+import { updateRecentSearchesAsync } from '@/store/slices/recentSearchesSlice'
+import { useDispatch } from 'react-redux'
 
 
 export function Navbar() {
@@ -33,6 +37,31 @@ export function Navbar() {
   const {categories} = useFetchCategories();
   const { products } = useFetchProducts();
   const { wishlist } = useFetchWishlist();
+  const { recentSearches } = useFetchRecentSearches()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showRecentSearches, setShowRecentSearches] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const dispatch = useDispatch();
+
+
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) { 
+      // @ts-ignore
+      dispatch(updateRecentSearchesAsync(searchQuery.trim()))
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+
+    }
+  }
+
+  const handleRecentSearchSelect = (search: string) => {
+    setSearchQuery(search)
+    setShowRecentSearches(false)
+    if (searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+  }
 
   return (
     <>
@@ -50,12 +79,17 @@ export function Navbar() {
           </div>
 
           {/* Middle section */}
-          <div className="hidden lg:flex justify-center">
-            <form className="relative w-full max-w-sm">
+          <div className="hidden lg:flex justify-center relative">
+            <form onSubmit={handleSearch} className="relative w-full max-w-sm">
               <Input
                 type="search"
                 placeholder="Search..."
                 className="w-full pr-10 border-2 border-primary/20 focus-visible:ring-primary"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setShowRecentSearches(true)}
+                onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)}
+                ref={searchInputRef}
               />
               <Button
                 type="submit"
@@ -65,6 +99,9 @@ export function Navbar() {
                 <Search className="h-4 w-4" />
                 <span className="sr-only">Search</span>
               </Button>
+              {showRecentSearches && (
+                <RecentSearches onSelect={handleRecentSearchSelect} />
+              )}
             </form>
           </div>
 

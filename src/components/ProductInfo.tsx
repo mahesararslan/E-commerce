@@ -9,7 +9,7 @@ import { Heart, ShoppingCart, Plus, Minus } from 'lucide-react'
 import axios from 'axios'
 import { useFetchWishlist } from '@/hooks/useFetchWishlist'
 import { useDispatch } from 'react-redux'
-import { addToWishlist, removeFromWishlist } from '@/store/slices/wishlistSlice'
+import { addToWishlistAsync, removeFromWishlistAsync } from '@/store/slices/wishlistSlice'
 
 interface ProductInfoProps {
   product: {
@@ -34,16 +34,16 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
   }, [wishlist, product._id]);
 
   const addsToWishlist = async () => {
-    try { 
-      dispatch(addToWishlist(product._id));
+    try { // @ts-ignore
+      dispatch(addToWishlistAsync(product._id));
     } catch (error) {
       console.error('Error adding to wishlist:', error);
     }
   };
 
   const removesFromWishlist = async () => {
-    try { 
-      dispatch(removeFromWishlist(product._id));
+    try { // @ts-ignore 
+      dispatch(removeFromWishlistAsync(product._id));
     } catch (error) {
       console.error('Error removing from wishlist:', error);
     }

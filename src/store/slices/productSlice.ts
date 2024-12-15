@@ -6,6 +6,7 @@ interface Product {
   price: number;
   description: string;
   images: string[];
+  rating: number;
   stock: number;
   category: string;
   isOnSale: boolean;

@@ -9,7 +9,7 @@ import { Heart, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useFetchWishlist } from '@/hooks/useFetchWishlist'
 import { useDispatch } from 'react-redux'
-import { addToWishlist, removeFromWishlist } from '@/store/slices/wishlistSlice'
+import { addToWishlist, addToWishlistAsync, removeFromWishlist, removeFromWishlistAsync } from '@/store/slices/wishlistSlice'
 
 interface ProductCardProps {
   id: string
@@ -36,15 +36,15 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
     const addsToWishlist = async () => {
       try { // @ts-ignore
          // @ts-ignore
-        dispatch(addToWishlist(id));
+        dispatch(addToWishlistAsync(id));
       } catch (error) {
         console.error('Error adding to wishlist:', error);
       }
     };
   
     const removesFromWishlist = async () => {
-      try { 
-        dispatch(removeFromWishlist(id));
+      try {  // @ts-ignore
+        dispatch(removeFromWishlistAsync(id));
       } catch (error) {
         console.error('Error removing from wishlist:', error);
       }
@@ -102,6 +102,15 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
             </Button>
           </>
         )}
+        <button
+              className="absolute right-2 top-2 z-10"
+              onClick={toggleWishlist}
+            >
+              <Heart
+                className={`w-6 h-6 ${isWishlisted ? 'text-red-500' : 'text-gray-400'}`}
+                fill={isWishlisted ? 'currentColor' : 'none'}
+              />
+            </button>
       </div>
       <div className="p-4 flex-grow">
         <h3 className="font-semibold text-lg mb-2">{name}</h3>
@@ -118,13 +127,9 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
         </div>
       </div>
       <div className="p-4 bg-muted/50 flex justify-between">
-        <Button size="sm" className="w-[48%] text-white hover:bg-cyan-900 font-semibold">
-          <ShoppingCart className="w-4 h-4 mr-2 " />
+        <Button size="sm" className="w-full text-white hover:bg-cyan-900 font-semibold">
+          <ShoppingCart className=" h-4 mr-2 " />
           Add to Cart
-        </Button>
-        <Button onClick={toggleWishlist} size="sm" variant="outline" className="w-[48%]">
-          <Heart className="w-4 h-4 mr-2" />
-          {isWishlisted ? 'Remove' : 'Wishlist'}
         </Button>
       </div>
     </motion.div>

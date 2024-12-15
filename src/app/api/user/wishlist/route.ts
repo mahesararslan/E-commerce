@@ -7,14 +7,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    if (!session?.user?.email) {
         return NextResponse.json({
             status: 401,
             message: "Unauthorized",
         });
     }
-
-    console.log(session?.user);
 
     try {
         const { productId } = await req.json();
