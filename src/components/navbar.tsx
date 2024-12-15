@@ -27,6 +27,7 @@ import { RecentSearches } from './RecentSearches'
 import { useFetchRecentSearches } from '@/hooks/useFetchRecentSearches'
 import { updateRecentSearchesAsync } from '@/store/slices/recentSearchesSlice'
 import { useDispatch } from 'react-redux'
+import { Cart } from './Cart'
 
 
 export function Navbar() {
@@ -42,6 +43,7 @@ export function Navbar() {
   const [showRecentSearches, setShowRecentSearches] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch();
+  const [isCartOpen, setIsCartOpen] = useState(false)
 
 
 
@@ -177,15 +179,16 @@ export function Navbar() {
                 <MoonIcon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </Button>
             </div>
-            <Link href="/cart" className="hover:text-primary transition-colors">
+            <Button variant="ghost" size="icon" onClick={() => setIsCartOpen(true)}>
               <ShoppingCart className="h-6 w-6" />
-              <span className="sr-only">View cart</span>
-            </Link>
+              <span className="sr-only">Open cart</span>
+            </Button>
             
           </div>
         </div>
       </nav>
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   )
 }
