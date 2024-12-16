@@ -56,7 +56,6 @@ const customUserSchema = new Schema({
         default: 1, // Default quantity is 1
         min: 1, // Ensure minimum quantity is 1
       },
-      default: [],
     },
   ],
 });

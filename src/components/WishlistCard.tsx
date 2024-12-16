@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ShoppingCart, Trash2 } from 'lucide-react'
 
+
 interface WishlistCardProps {
   id: string
   name: string
@@ -14,6 +15,8 @@ interface WishlistCardProps {
 }
 
 export function WishlistCard({ id, name, price, salePrice, images, onRemove, onAddToCart }: WishlistCardProps) {
+
+
   return (
     <div className="bg-card text-card-foreground rounded-lg shadow-md overflow-hidden">
       <Link href={`/product/${id}`} className="block hover:opacity-80 transition-opacity">
