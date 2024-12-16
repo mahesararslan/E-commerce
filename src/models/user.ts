@@ -44,8 +44,18 @@ const customUserSchema = new Schema({
   ],
   cart: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'Product',
+      _id: false,
+      productId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        default: 1, // Default quantity is 1
+        min: 1, // Ensure minimum quantity is 1
+      },
       default: [],
     },
   ],

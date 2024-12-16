@@ -9,6 +9,9 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/hooks/use-toast'
 import { useFetchCart } from '@/hooks/useFetchCart'
+import { useFetchProducts } from '@/hooks/useFetchProducts'
+import { useDispatch } from 'react-redux'
+import { clearCartAsync, removeFromCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
 
 interface CartItem {
   id: string
@@ -24,18 +27,29 @@ interface CartProps {
 }
 
 export function Cart({ isOpen, onClose }: CartProps) {
-  const { cart: cartItems } = useFetchCart();
-  const [isLoading, setIsLoading] = useState(true)
+  const { cart, loading: isLoading } = useFetchCart();
+  const { products } = useFetchProducts();
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
   const { data: session } = useSession()
   const { toast } = useToast()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!cart || !products || cart.length === 0 || products.length === 0) return;
+    const items = cart.map(({ productId, quantity }) => {
+      const product = products.find((p) => p._id === productId);
+      return product
+        ? { ...product, id: productId, quantity, image: product.images[0] }
+        : null;
+    });
+    
+    setCartItems(items.filter(Boolean) as CartItem[]);
+  }, [cart, products]);
+  
 
   const updateQuantity = async (itemId: string, newQuantity: number) => {
-    try {
-      await fetch(`/api/user/${session?.user?.email}/cart/${itemId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity: newQuantity }),
-      })
+    try { // @ts-ignore
+      dispatch(updateQuantityAsync({ productId: itemId, quantity: newQuantity }))
       setCartItems(cartItems.map(item => 
         item.id === itemId ? { ...item, quantity: newQuantity } : item
       ))
@@ -50,10 +64,8 @@ export function Cart({ isOpen, onClose }: CartProps) {
   }
 
   const removeItem = async (itemId: string) => {
-    try {
-      await fetch(`/api/user/${session?.user?.email}/cart/${itemId}`, {
-        method: 'DELETE',
-      })
+    try { // @ts-ignore
+      dispatch(removeFromCartAsync(itemId))
       setCartItems(cartItems.filter(item => item.id !== itemId))
     } catch (error) {
       console.error('Error removing item:', error)
@@ -66,10 +78,8 @@ export function Cart({ isOpen, onClose }: CartProps) {
   }
 
   const clearCart = async () => {
-    try {
-      await fetch(`/api/user/${session?.user?.email}/cart`, {
-        method: 'DELETE',
-      })
+    try { // @ts-ignore
+      dispatch(clearCartAsync())
       setCartItems([])
     } catch (error) {
       console.error('Error clearing cart:', error)
@@ -138,10 +148,10 @@ export function Cart({ isOpen, onClose }: CartProps) {
             <Button variant="outline" className="w-full mb-2" onClick={clearCart}>
               Clear Cart
             </Button>
-            <Button className="w-full mb-2">
+            <Button className="w-full mb-2 text-white bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900">
               <ShoppingCart className="mr-2 h-4 w-4" /> View Cart
             </Button>
-            <Button className="w-full">
+            <Button className="w-full text-white font-semibold bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900">
               <CreditCard className="mr-2 h-4 w-4" /> Proceed to Checkout
             </Button>
           </div>

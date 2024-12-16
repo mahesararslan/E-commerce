@@ -15,13 +15,14 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const { productId } = await req.json();
-
+        const { productId, quantity } = await req.json();
+        console.log(productId, quantity);
+        console.log("PRODUCT ID: ", productId);
         await mongooseConnect();
         // @ts-ignore // update the user's cart
         const user = await User.findOneAndUpdate( // @ts-ignore
             { email: session.user.email },
-            { $addToSet: { cart: productId } },
+            { $addToSet: { cart: { productId, quantity } } },
             { new: true }
         );
 
@@ -33,6 +34,8 @@ export async function POST(req: NextRequest) {
                 message: "User not found",
             });
         }
+
+        console.log("CART: ",user.cart);
 
         return NextResponse.json({
             status: 200,
@@ -60,15 +63,22 @@ export async function PUT(req: NextRequest) {
 
     try {
         const { productId, quantity } = await req.json();
+        console.log("QUANTITY: ", quantity);
 
         await mongooseConnect();
         // @ts-ignore // update the user's cart
-        const user = await User.findOneAndUpdate( // @ts-ignore
-            { email: session.user.email, cart: productId },
-            { $set: { "cart.$": quantity } },
-            { new: true }
+        const user = await User.findOneAndUpdate(
+            { 
+                email: session.user.email, 
+                "cart.productId": productId // Match specific product in cart
+            },
+            { 
+                $set: { "cart.$.quantity": quantity } // Update quantity of the matched cart item
+            },
+            { 
+                new: true // Return the updated user document
+            }
         );
-
         console.log(user);
 
         if (!user) {

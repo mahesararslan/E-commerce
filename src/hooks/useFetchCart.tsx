@@ -19,7 +19,13 @@ export const useFetchCart = () => {
         setError(null);
         try {
           const response = await axios.get(`/api/user`);
-          dispatch(setCart(response.data.cart));
+          const arr: [{productId: string, quantity:number}] = response.data.cart.map((item: any) => {
+            return {
+              productId: item.productId,
+              quantity: item.quantity,
+            };
+          });
+          dispatch(setCart(arr));
         } catch (err) {
           setError(err as Error);
         } finally {
@@ -29,7 +35,7 @@ export const useFetchCart = () => {
 
       fetchCartProducts();
     }
-  }, [cart.length, session, dispatch]);
+  }, [session, dispatch]);
 
   return { cart, loading, error };
 };

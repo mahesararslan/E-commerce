@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { addToWishlistAsync, removeFromWishlistAsync } from '@/store/slices/wishlistSlice'
 import { useFetchWishlist } from '@/hooks/useFetchWishlist';
+import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice';
+import { useFetchCart } from '@/hooks/useFetchCart';
 
 interface TopProductCardProps {
   _id: string;
@@ -24,6 +26,7 @@ export function TopProductCard({ _id, name, price, images, rating }: TopProductC
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const { wishlist, loading } = useFetchWishlist()
+  const { cart } = useFetchCart();
   const dispatch = useDispatch();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const displayRating = rating || 4 + Math.random();
@@ -41,7 +44,7 @@ export function TopProductCard({ _id, name, price, images, rating }: TopProductC
     } catch (error) {
       console.error('Error adding to wishlist:', error);
     }
-  };
+  };  
 
   const removesFromWishlist = async () => {
     try { // @ts-ignore
@@ -63,6 +66,25 @@ export function TopProductCard({ _id, name, price, images, rating }: TopProductC
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
+
+  const addToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try { // @ts-ignore
+      if (cart.length !== 0 && session?.user?.email) {
+        const cartItem = cart.find((item) => item.productId === _id);
+        if (cartItem) {
+          const newQuantity = cartItem.quantity + 1; // @ts-ignore
+          dispatch(updateQuantityAsync({ productId: _id, quantity: newQuantity }));
+          return;
+        }
+      }
+      const props = {productId: _id, quantity: 1}; // @ts-ignore
+      dispatch(addToCartAsync(props));
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  }
 
   return (
     <Link href={`/product/${_id}`}>
@@ -114,7 +136,9 @@ export function TopProductCard({ _id, name, price, images, rating }: TopProductC
           <div className="mt-4 flex items-center justify-between">
             <span className="text-xl font-bold text-primary">${price.toFixed(2)}</span>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button size="sm" className="rounded-lg text-white font-semibold px-5 bg-gradient-to-b from-cyan-600 via-teal-600 to-teal-800">
+              <Button size="sm" className="rounded-lg text-white font-semibold bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900"
+                onClick={addToCart}
+              >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Add to Cart
               </Button>
@@ -122,6 +146,6 @@ export function TopProductCard({ _id, name, price, images, rating }: TopProductC
           </div>
         </div>
       </motion.div>
-    </Link>
+      </Link>
   );
 }

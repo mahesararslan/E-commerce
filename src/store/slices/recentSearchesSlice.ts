@@ -28,16 +28,16 @@ const recentSearchesSlice = createSlice({
   reducers: {
     addRecentSearch: (state, action: PayloadAction<string>) => {
       const search = action.payload;
-
+      console.log("BEFORE: ", state.searches);
       // Remove the search if it already exists to avoid duplicates
       state.searches = state.searches.filter((item) => item !== search);
-
+      console.log("AFTER: ", state.searches);
       // Add the new search to the end
       state.searches.push(search);
 
       // Keep only the latest 5 searches
       if (state.searches.length > 5) {
-        state.searches.shift(); // Remove the oldest search
+        state.searches = state.searches.slice(1,6) // Remove the oldest search
       }
     },
     setRecentSearches: (state, action: PayloadAction<string[]>) => {

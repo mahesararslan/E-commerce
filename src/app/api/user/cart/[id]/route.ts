@@ -23,7 +23,9 @@ export async function DELETE(request: Request, context: { params: { id: string }
         // find by email and update the cart
         const user = await User.findOneAndUpdate(
             { email: session.user.email },
-            { $pull: { cart: id } },
+            { 
+                $pull: { cart: { productId: id } } // Match objects where _id matches the given id
+            },
             { new: true }
         );
         

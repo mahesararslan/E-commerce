@@ -10,6 +10,8 @@ import { useSession } from 'next-auth/react'
 import { useFetchWishlist } from '@/hooks/useFetchWishlist'
 import { useDispatch } from 'react-redux'
 import { addToWishlist, addToWishlistAsync, removeFromWishlist, removeFromWishlistAsync } from '@/store/slices/wishlistSlice'
+import { useFetchCart } from '@/hooks/useFetchCart'
+import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
 
 interface ProductCardProps {
   id: string
@@ -24,6 +26,7 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const { data: session } = useSession();
   const { wishlist, loading } = useFetchWishlist()
+  const { cart } = useFetchCart();
   const dispatch = useDispatch();
   const [isWishlisted, setIsWishlisted] = useState(false);
   
@@ -52,6 +55,7 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
   
     const toggleWishlist = (e: React.MouseEvent) => {
       e.preventDefault(); // Prevent Link navigation
+      e.stopPropagation();
       if (isWishlisted) {
         removesFromWishlist();
       } else {
@@ -59,11 +63,36 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
       }
     };
 
-  const nextImage = () => {
+    
+      const addToCart = async (event: React.MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        try { // @ts-ignore
+          if (cart.length !== 0 && session?.user?.email) {
+            const cartItem = cart.find((item) => item.productId === id);
+            if (cartItem) {
+              const newQuantity = cartItem.quantity + 1; // @ts-ignore
+              dispatch(updateQuantityAsync({ productId: id, quantity: newQuantity }));
+              return;
+            }
+          }
+          const props = {productId: id, quantity: 1}; // @ts-ignore
+          dispatch(addToCartAsync(props));
+        } catch (error) {
+          console.error('Error adding to cart:', error);
+        }
+      }
+    
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();    
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
   }
 
-  const prevImage = () => {
+  const prevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();  
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
   }
 
@@ -127,7 +156,9 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
         </div>
       </div>
       <div className="p-4 bg-muted/50 flex justify-between">
-        <Button size="sm" className="w-full text-white hover:bg-cyan-900 font-semibold">
+        <Button size="sm" className="w-full text-white font-semibold bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900"
+          onClick={addToCart}
+        >
           <ShoppingCart className=" h-4 mr-2 " />
           Add to Cart
         </Button>

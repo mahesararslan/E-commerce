@@ -20,7 +20,7 @@ export const addToCartAsync = createAsyncThunk(
   'cart/addToCart',
   async ({productId, quantity}: {productId:string, quantity: number}, { dispatch }) => {
     console.log('Adding to cart:', {productId, quantity});
-    await axios.post(`/api/user/cart`, { productId }); // API to add product to cart
+    await axios.post(`/api/user/cart`, { productId, quantity }); // API to add product to cart
     dispatch(addToCart({ productId, quantity: quantity })); // Add product with initial quantity of 1
   }
 );
@@ -75,6 +75,7 @@ const cartSlice = createSlice({
     },
     setCart: (state, action: PayloadAction<CartItem[]>) => {
       state.items = action.payload; // Set cart state directly
+      console.log('Cart set:', state.items);
     },
     clearCart: (state) => {
       state.items = []; // Clear the cart array in the state
