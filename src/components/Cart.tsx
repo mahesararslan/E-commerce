@@ -12,6 +12,7 @@ import { useFetchCart } from '@/hooks/useFetchCart'
 import { useFetchProducts } from '@/hooks/useFetchProducts'
 import { useDispatch } from 'react-redux'
 import { clearCartAsync, removeFromCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
+import { useRouter } from 'next/navigation'
 
 interface CartItem {
   id: string
@@ -33,6 +34,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
   const { data: session } = useSession()
   const { toast } = useToast()
   const dispatch = useDispatch()
+  const router = useRouter()
 
   useEffect(() => {
     if (!cart || !products || cart.length === 0 || products.length === 0) return;
@@ -148,7 +150,9 @@ export function Cart({ isOpen, onClose }: CartProps) {
             <Button variant="outline" className="w-full mb-2" onClick={clearCart}>
               Clear Cart
             </Button>
-            <Button className="w-full mb-2 text-white bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900">
+            <Button className="w-full mb-2 text-white bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900"
+              onClick={() => {router.push('/cart')}}
+            >
               <ShoppingCart className="mr-2 h-4 w-4" /> View Cart
             </Button>
             <Button className="w-full text-white font-semibold bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900">

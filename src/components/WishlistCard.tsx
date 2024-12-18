@@ -18,7 +18,7 @@ export function WishlistCard({ id, name, price, salePrice, images, onRemove, onA
 
 
   return (
-    <div className="bg-card text-card-foreground rounded-lg shadow-md overflow-hidden">
+    <div className="bg-card text-card-foreground rounded-lg shadow-md overflow-hidden dark:border-2 dark:border-gray-600">
       <Link href={`/product/${id}`} className="block hover:opacity-80 transition-opacity">
         <div className="p-4">
           {/* Layout for md and larger screens */}

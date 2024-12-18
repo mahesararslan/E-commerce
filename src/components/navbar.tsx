@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -18,7 +18,6 @@ import { Sidebar } from './sidebar'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useRouter } from 'next/navigation'
-import { Logo } from './Logo'
 import Image from 'next/image'
 import { useFetchWishlist } from '@/hooks/useFetchWishlist'
 import { useFetchProducts } from '@/hooks/useFetchProducts'
@@ -29,6 +28,7 @@ import { updateRecentSearchesAsync } from '@/store/slices/recentSearchesSlice'
 import { useDispatch } from 'react-redux'
 import { Cart } from './Cart'
 import { useFetchCart } from '@/hooks/useFetchCart'
+import { Suggestions } from './Suggestions'
 
 
 export function Navbar() {
@@ -46,23 +46,6 @@ export function Navbar() {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch();
   const [isCartOpen, setIsCartOpen] = useState(false)
-  const [suggestions, setSuggestions] = useState<any []>([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
-
-  useEffect(() => {
-    let results = [];
-    if (searchQuery.trim()) {
-      results = products.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.trim().toLowerCase())
-      )
-      if(results.length > 0) {
-        setSuggestions(results)
-        setShowSuggestions(true)
-      }
-    } else {
-      setSuggestions([])
-    }
-  }, [searchQuery, products])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -118,30 +101,18 @@ export function Navbar() {
                 <Search className="h-4 w-4" />
                 <span className="sr-only">Search</span>
               </Button>
+              {searchQuery.length > 0 && (
+                <Suggestions
+                  searchQuery={searchQuery}
+                  onSelect={(productId) => {
+                    setSearchQuery('')
+                    router.push(`/product/${productId}`)
+                  }}
+                />
+              )}
               {searchQuery === "" && showRecentSearches && (
                 <RecentSearches onSelect={handleRecentSearchSelect} />
               )}
-              {showSuggestions && (
-                <ul className="absolute top-full left-0 w-full bg-background border border-input rounded-md shadow-lg mt-1 z-10">
-                  {suggestions.map((product) => (
-                    <li
-                      key={product._id}
-                      className="px-4 py-2 hover:bg-accent cursor-pointer w-full"
-                      onMouseDown={(e: React.MouseEvent) => {
-                        e.preventDefault();
-                        setSuggestions([]);
-                        setShowSuggestions(false);
-                        setSearchQuery(product.name);
-                        router.push(`/product/${product._id}`); // @ts-ignore
-                        dispatch(updateRecentSearchesAsync(product.name))
-                      }}
-                    >
-                      {product.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-
             </form>
           </div>
 
@@ -188,7 +159,7 @@ export function Navbar() {
                   <DropdownMenuTrigger asChild>
                   <Avatar className="h-8 w-8 cursor-pointer">
                     <AvatarImage src={session?.user?.image || ""} alt={session?.user?.name || ""} />
-                    <AvatarFallback> 
+                    <AvatarFallback className='bg-primary text-white'> 
                       {// @ts-ignore
                       }{session?.user?.firstName ? session.user.firstName.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
                     </AvatarFallback>
@@ -217,8 +188,8 @@ export function Navbar() {
                 <MoonIcon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </Button>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => setIsCartOpen(true)}  className="relative" >
-              <ShoppingCart className="h-6 w-6" />
+            <Button variant="none" size="icon" onClick={() => setIsCartOpen(true)}  className="relative hover:text-primary transition-colors" >
+              <ShoppingCart className="h-7 w-7 hover:scale-125 scale-110 hover:text-primary" />
                 {cart.length > 0 && (
                   <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
                     {cart.length > 5 ? '5+' : cart.length}

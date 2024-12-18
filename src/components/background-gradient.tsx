@@ -2,8 +2,11 @@
 import React from "react";
 import { BackgroundGradient } from "./ui/background-gradient";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-export function BackgroundGradientCards({ title, description, url } : { title: string, description: string, url: string }) {
+export function BackgroundGradientCards({ id, title, description, url } : { id:string, title: string, description: string, url: string }) {
+  const router = useRouter();
+
   return (
     <div className="h-full">
       <BackgroundGradient className="h-full rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900">
@@ -25,8 +28,12 @@ export function BackgroundGradientCards({ title, description, url } : { title: s
             <p className="text-sm text-neutral-600 dark:text-neutral-400">
               {description}
             </p>
-            <button className="rounded-full px-4 py-1 text-white flex items-center space-x-1 bg-black mt-4 text-xs font-bold dark:bg-zinc-800">
-              <span>Buy now </span>
+            <button className="rounded-full px-4 py-1 text-white flex items-center space-x-1 bg-black mt-4 text-xs font-bold dark:bg-zinc-800 hover:scale-110"
+              onClick={() => {
+                router.push(`/category/${id}`);
+              }}
+            >
+              <span>Explore now </span>
             </button>
           </div>
         </div>

@@ -1,10 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react'
 import { CategoryCarousel } from './category-carousel'
-import axios from 'axios'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store/store'
 import { useFetchCategories } from '@/hooks/useFetchCategories'
 
 export function Categories() {

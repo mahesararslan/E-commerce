@@ -7,7 +7,7 @@ import { BackgroundGradientCards } from '@/components/background-gradient'
 import { Button } from './ui/button'
 
 interface Product {
-  _id: number
+  _id: string
   name: string
   image: string
   description: string
@@ -36,6 +36,7 @@ export function CategoryCarousel({ products }: ProductCarouselProps) {
           {products.map((product) => (
             <div key={product._id} className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] md:flex-[0_0_33.33%] lg:flex-[0_0_25%] px-4">
               <BackgroundGradientCards
+                id={product._id}
                 title={product.name}
                 description={`${product.description}`}
                 url={product.image}

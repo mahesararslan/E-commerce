@@ -75,9 +75,9 @@ export default function WishlistPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-muted dark:bg-background">
       <main className="flex-grow">
-        <section className="py-16 bg-gradient-to-b from-background to-muted">
+        <section className="py-16">
           <div className="container mx-auto px-4">
             <motion.h1 
               className="text-4xl md:text-5xl font-bold text-center mb-12"
