@@ -11,6 +11,7 @@ import { useFetchCart } from '@/hooks/useFetchCart'
 import { useEffect, useState } from 'react'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
+import { clearCartAsync, removeFromCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
 
 interface CartItem {
     id: string
@@ -30,6 +31,7 @@ export default function CartPage() {
     const { cart, loading: isLoading } = useFetchCart();
     const { products } = useFetchProducts();
     const [cartItems, setCartItems] = useState<CartItem[]>([])
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!cart || !products || cart.length === 0 || products.length === 0) return;
