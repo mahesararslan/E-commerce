@@ -8,6 +8,7 @@ import { Pagination } from '@/components/pagination';
 import { ProductFilters } from '@/components/ProductFilters';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { useFetchProducts } from '@/hooks/useFetchProducts';
+import Link from 'next/link';
 
 interface Product {
   _id: string;
@@ -116,6 +117,7 @@ export default function AllProductsPage() {
                       animate={isIntersecting ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
+                      <Link href={`/product/${product._id}`}>
                       <ProductCard
                         id={product._id}
                         name={product.name}
@@ -124,6 +126,7 @@ export default function AllProductsPage() {
                         images={product.images}
                         rating={product.rating}
                       />
+                      </Link>
                     </motion.div>
                   ))}
                 </div>

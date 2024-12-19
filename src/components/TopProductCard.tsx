@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -13,16 +15,18 @@ import { addToWishlistAsync, removeFromWishlistAsync } from '@/store/slices/wish
 import { useFetchWishlist } from '@/hooks/useFetchWishlist';
 import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice';
 import { useFetchCart } from '@/hooks/useFetchCart';
+import { useRouter } from 'next/navigation';
 
 interface TopProductCardProps {
   _id: string;
   name: string;
   price: number;
+  salePrice?: number;
   images: string[];
   rating?: number;
 }
 
-export function TopProductCard({ _id, name, price, images, rating }: TopProductCardProps) {
+export function TopProductCard({ _id, name, price, salePrice, images, rating }: TopProductCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const { wishlist, loading } = useFetchWishlist()
@@ -31,6 +35,7 @@ export function TopProductCard({ _id, name, price, images, rating }: TopProductC
   const [isWishlisted, setIsWishlisted] = useState(false);
   const displayRating = rating || 4 + Math.random();
   const { data: session } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     if(wishlist.length !== 0 && session?.user?.email) {
@@ -131,17 +136,19 @@ export function TopProductCard({ _id, name, price, images, rating }: TopProductC
         <div className="p-4 flex-grow flex flex-col justify-between">
           <div>
             <h3 className="font-semibold text-lg mb-2 truncate">{name}</h3>
-            <StarRating rating={displayRating} />
+            <div className='flex items-center justify-between'>
+              <StarRating rating={displayRating} />
+              <span className="text-xl font-bold text-primary">${salePrice ? salePrice.toFixed(2) : price.toFixed(2)}</span>
+            </div>
           </div>
-          <div className="mt-4 flex items-center justify-between">
-            <span className="text-xl font-bold text-primary">${price.toFixed(2)}</span>
+          <div className="mt-4 w-full">
+            
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button size="sm" className="rounded-lg text-white font-semibold bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900"
-                onClick={addToCart}
-              >
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Add to Cart
-              </Button>
+            <Button className="w-full  text-white bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900"
+              onClick={addToCart}
+            >
+              <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+            </Button>
             </motion.div>
           </div>
         </div>

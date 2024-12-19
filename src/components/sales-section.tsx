@@ -6,16 +6,50 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Image from 'next/image'
 import { CustomButton } from './CustomButton'
+import { useFetchProducts } from '@/hooks/useFetchProducts'
+import Link from 'next/link'
+import { useFetchCart } from '@/hooks/useFetchCart'
+import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
+import { useDispatch } from 'react-redux'
+import { useSession } from 'next-auth/react'
 
-const bestDeals = [
-  { id: 1, name: "iPhone 16 Plus", price: 799, discount: 30, image: "/Iphone16.png" },
-  { id: 2, name: "Wireless Headphones", price: 199, discount: 25, image: "/headphones.png" },
-  { id: 3, name: "Macbook Air 15 M2", price: 1299, discount: 20, image: "/Macbook.png" },
-  { id: 4, name: "HP Notebook 15 - 250 G10 i3", price: 999, discount: 15, image: "/HP_laptop.png" },
-]
+interface Product {
+  _id: string;
+  name: string
+  price: number
+  images: string[]
+  rating?: number
+  salePrice: number | undefined
+  isOnSale: boolean
+}
+
 
 export function SalesSection() {
-  const [hoveredDeal, setHoveredDeal] = useState<number | null>(null)
+  const { products } = useFetchProducts();
+  const { cart } = useFetchCart();
+  const [hoveredDeal, setHoveredDeal] = useState<string | null>(null)
+  const dispatch = useDispatch();
+  const { data: session } = useSession();
+
+  
+    const addToCart = async (e: React.MouseEvent, id: string) => {
+      e.preventDefault();
+      e.stopPropagation();
+      try { // @ts-ignore
+        if (cart.length !== 0 && session?.user?.email) {
+          const cartItem = cart.find((item) => item.productId === id);
+          if (cartItem) {
+            const newQuantity = cartItem.quantity + 1; // @ts-ignore
+            dispatch(updateQuantityAsync({ productId: _id, quantity: newQuantity }));
+            return;
+          }
+        }
+        const props = {productId: id, quantity: 1}; // @ts-ignore
+        dispatch(addToCartAsync(props));
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+      }
+    }
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-primary/10">
@@ -37,34 +71,36 @@ export function SalesSection() {
         <div className="mb-12">
           <h3 className="text-2xl font-bold mb-6 text-foreground text-center">Best Deals</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {bestDeals.map((deal, index) => (
+            {products.filter((product) => product.isOnSale).slice(0, 4).map((deal, index) => (
               <motion.div
-                key={deal.id}
+                key={deal._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                onHoverStart={() => setHoveredDeal(deal.id)}
+                onHoverStart={() => setHoveredDeal(deal._id)}
                 onHoverEnd={() => setHoveredDeal(null)}
               >
                 <Card className="overflow-hidden">
                   <CardContent className="p-0">
-                    <div className="relative">
+                    <Link href={`/product/${deal._id}`} className="relative cursor-pointer">
                       <Image
-                        src={deal.image}
+                        src={deal.images[0]}
                         alt={deal.name}
                         width={300}
                         height={200}
                         className="w-full object-cover"
                       />
                       <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm font-bold text-white">
-                        {deal.discount}% OFF
+                        { // @ts-ignore
+                        Math.round(((deal.price-deal.salePrice)/deal.price) * 100)}% OFF
                       </div>
-                    </div>
+                    </Link>
                     <div className="p-4">
                       <h4 className="font-semibold mb-2">{deal.name}</h4>
                       <div className="flex justify-between items-center">
                         <span className="text-lg font-bold text-primary">
-                          ${(deal.price * (1 - deal.discount / 100)).toFixed(2)}
+                          ${ // @ts-ignore
+                          (deal.salePrice).toFixed(2)}
                         </span>
                         <span className="text-sm line-through text-muted-foreground">
                           ${deal.price}
@@ -73,7 +109,9 @@ export function SalesSection() {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button className={hoveredDeal === deal.id ? "w-full text-white" : "w-full text-foreground hover:text-white"} variant={hoveredDeal === deal.id ? "default" : "outline"}>
+                    <Button className={hoveredDeal === deal._id ? "w-full text-white" : "w-full text-foreground hover:text-white"} variant={hoveredDeal === deal._id ? "default" : "outline"}
+                      onClick={(e) => addToCart(e, deal._id)}
+                    >
                       Add to Cart
                     </Button>
                   </CardFooter>
@@ -89,7 +127,7 @@ export function SalesSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <CustomButton url="/sale" >
+          <CustomButton url="/products" >
             View All Deals
           </CustomButton>
         </motion.div>
