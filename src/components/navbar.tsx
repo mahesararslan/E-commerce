@@ -29,6 +29,7 @@ import { useDispatch } from 'react-redux'
 import { Cart } from './Cart'
 import { useFetchCart } from '@/hooks/useFetchCart'
 import { Suggestions } from './Suggestions'
+import { MenuItem, ProductItem } from './ProductsNavbar'
 
 
 export function Navbar() {
@@ -46,6 +47,7 @@ export function Navbar() {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch();
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [active, setActive] = useState<string | null>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -119,7 +121,21 @@ export function Navbar() {
           {/* Right section */}
           <div className="flex items-center justify-end space-x-4">
             <div className="hidden lg:flex items-center space-x-4">
-              <DropdownMenu>
+              <MenuItem setActive={setActive} active={active} item="Products">
+                <div className="text-sm grid grid-cols-2 xl:grid-cols-3 gap-10 p-4">
+                  {categories.map((category, index) => (
+                    <ProductItem
+                      key={category._id} // It's good practice to add a key when mapping item
+                      title={category.name}
+                      href={category._id}
+                      src={category.image} 
+                      description={category.description}
+                      onClick={() => setActive(null)}
+                    />
+                  ))}
+                </div>
+              </MenuItem>
+              {/* <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
@@ -145,7 +161,7 @@ export function Navbar() {
                     ))}
                   </div>
                 </DropdownMenuContent>
-              </DropdownMenu>
+              </DropdownMenu> */}
               <Link href="/wishlist" className="relative inline-block hover:text-primary transition-colors">
                 <Heart className="h-5 w-5" />
                 {wishlist.length > 0 && (
