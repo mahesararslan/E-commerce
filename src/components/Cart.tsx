@@ -151,12 +151,19 @@ export function Cart({ isOpen, onClose }: CartProps) {
               Clear Cart
             </Button>
             <Button className="w-full mb-2 text-white bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900"
-              onClick={() => {router.push('/cart')}}
+              onClick={() => {
+                onClose();
+                router.push('/cart')
+              }}
             >
               <ShoppingCart className="mr-2 h-4 w-4" /> View Cart
             </Button>
             <Button className="w-full text-white font-semibold bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900"
-              onClick={() => {router.push('/checkout')}}
+              onClick={() => {
+                // close the cart
+                onClose();
+                router.push('/checkout')
+              }}
             >
               <CreditCard className="mr-2 h-4 w-4" /> Proceed to Checkout
             </Button>

@@ -33,39 +33,59 @@ interface CartItem {
   isOnSale: boolean
 }
 
+
 export default function CheckoutPage() {
-  const { control, handleSubmit, formState: { errors } } = useForm<CheckoutFormData>()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { cart } = useFetchCart();
   const { products } = useFetchProducts();
   const [cartItems, setCartItems] = useState<CartItem []>([])
-  const [totalCost, setTotalCost] = useState(0)
+  const [totalCost, setTotalCost] = useState(0);
+  const { control, handleSubmit, formState: { errors } } = useForm<CheckoutFormData>({
+    defaultValues: {
+      name: '',
+      country: '',
+      city: '',
+      phoneNumber: '',
+      address: '',
+      postalCode: '',
+      paymentMethod: 'stripe', // Provide a default value here
+    },
+  });
 
   useEffect(() => {
-    const items = cart.map(({ productId, quantity }) => {
+    if (cart && products.length) {
+      const items = cart.map(({ productId, quantity }) => {
         const product = products.find((p) => p._id === productId);
-        return product
-          ? { ...product, quantity, image: product.images[0] }
-          : null;
+        return product ? { ...product, quantity, image: product.images[0] } : null;
       });
-      
-    setCartItems(items.filter(Boolean) as CartItem[]);
-
-    const total = cartItems.reduce((total, item) => {
-      if (item) {
+  
+      setCartItems(items.filter(Boolean) as CartItem[]);
+    }
+  }, [cart, products]);
+  
+  useEffect(() => {
+    if (cartItems.length) {
+      const total = cartItems.reduce((total, item) => {
         return total + (item.isOnSale && item.salePrice ? item.salePrice * item.quantity : item.price * item.quantity);
-      }
-      return total;
-    }, 0);
-    setTotalCost(total);
-  }, [])
+      }, 0);
+      setTotalCost(total);
+    }
+  }, [cartItems]);
+  
 
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true)
     // Here you would typically send the data to your backend
-    console.log(data)
+    console.log("DATA:", data)
+    if (data.paymentMethod === 'cash') {
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      alert('Your order has been placed. You will receive a confirmation email shortly.')
+    }
+    else if (data.paymentMethod === 'stripe') {
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      alert('Redirecting to Stripe payment gateway...')
+    }
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
     setIsSubmitting(false)
     // Handle response, e.g., redirect to confirmation page
   }
@@ -212,8 +232,13 @@ export default function CheckoutPage() {
                   <div className="space-y-2">
                     {cartItems.map((item) => (
                       <div key={item._id} className="flex justify-between">
-                        <span>{item.name} x {item.quantity}</span>
-                        <span>${(item.price * item.quantity).toFixed(2)}</span>
+                        <img src={`${item.image}`} height={100} width={100} />
+                        <div className='flex flex-col justify-center items-center'>
+                          <span>{item.name} x {item.quantity}</span>
+                        </div>
+                        <div className='flex flex-col justify-center items-center'>
+                          <span>${(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
                       </div>
                     ))}
                     <div className="border-t pt-2 mt-2">
@@ -225,12 +250,12 @@ export default function CheckoutPage() {
                   </div>
                 </motion.div>
               </div>
-              <div className="md:col-span-2 flex justify-center mt-8">
+              <div className="md:col-span-2 flex justify-center mt-5">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button type="submit" size="lg" disabled={isSubmitting}>
+                  <Button type="submit" className='text-white font-semibold' size="lg" disabled={isSubmitting}>
                     {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
                   </Button>
                 </motion.div>

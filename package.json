@@ -22,6 +22,7 @@
     "@radix-ui/react-switch": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.2",
     "@reduxjs/toolkit": "^2.4.0",
+    "@stripe/stripe-js": "^5.4.0",
     "@tabler/icons-react": "^3.22.0",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",

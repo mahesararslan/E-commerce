@@ -73,7 +73,7 @@ export const MenuItem = ({
               <motion.div
                 transition={transition}
                 layoutId="active"
-                className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl max-h-[80vh] overflow-y-auto"
+                className="bg-gray-100 dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl max-h-[80vh] overflow-y-auto"
               >
                 <ScrollArea className="h-[calc(100vh-10rem)] pb-10 overflow-y-auto">
                     <motion.div
@@ -122,13 +122,13 @@ export const ProductItem = ({
   onClick?: () => void;
 }) => {
   return (
-    <Link href={`/category/${href}`} className="flex space-x-2 hover:scale-105" onClick={onClick}>
+    <Link href={`/category/${href}`} className="flex space-x-2 hover:scale-105 bg-inherit" onClick={onClick}>
       <Image
         src={src}
         width={140}
         height={70}
         alt={title}
-        className="flex-shrink-0 rounded-md shadow-2xl"
+        className="flex-shrink-0 rounded-md"
       />
       <div>
         <h4 className="text-xl font-bold mb-1 text-black dark:text-white">
