@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { countries } from '@/lib/countries'
 import { useFetchCart } from '@/hooks/useFetchCart'
 import { useFetchProducts } from '@/hooks/useFetchProducts'
+import { useRouter } from 'next/navigation'
 
 interface CheckoutFormData {
   name: string
@@ -35,6 +36,7 @@ interface CartItem {
 
 
 export default function CheckoutPage() {
+  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { cart } = useFetchCart();
   const { products } = useFetchProducts();
@@ -82,8 +84,7 @@ export default function CheckoutPage() {
       alert('Your order has been placed. You will receive a confirmation email shortly.')
     }
     else if (data.paymentMethod === 'stripe') {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      alert('Redirecting to Stripe payment gateway...')
+      router.push("/payment")
     }
     // Simulate API call
     setIsSubmitting(false)

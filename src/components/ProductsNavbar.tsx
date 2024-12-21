@@ -15,81 +15,79 @@ const transition = {
 };
 
 export const MenuItem = ({
-    setActive,
-    active,
-    item,
-    children,
-  }: {
-    setActive: (item: string | null) => void;
-    active: string | null;
-    item: string;
-    children?: React.ReactNode;
-  }) => {
-    const [isHovered, setIsHovered] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
-  
-    useEffect(() => {
-      const handleMouseLeave = () => {
-        setIsHovered(false);
-        setActive(null);
-      };
-  
-      const menuElement = menuRef.current;
-      if (menuElement) {
-        menuElement.addEventListener('mouseleave', handleMouseLeave);
-      }
-  
-      return () => {
-        if (menuElement) {
-          menuElement.removeEventListener('mouseleave', handleMouseLeave);
-        }
-      };
-    }, [setActive]);
-  
-    return (
-      <div 
-        ref={menuRef}
-        onMouseEnter={() => {
-          setIsHovered(true);
-          setActive(item);
-        }} 
-        className="relative"
-      >
-        <motion.p
-          transition={{ duration: 0.3 }}
-          className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white"
-        >
-          {item}
-        </motion.p>
-        <AnimatePresence>
-          {active === item && isHovered && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.85, y: 10 }}
-              transition={transition}
-              className="absolute top-[calc(100%_+_1.2rem)] right-1/2 transform -translate-x-1/2 pt-4 z-50"
-            >
-              <motion.div
-                transition={transition}
-                layoutId="active"
-                className="bg-gray-100 dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl max-h-[80vh] overflow-y-auto"
-              >
-                <ScrollArea className="h-[calc(100vh-10rem)] pb-10 overflow-y-auto">
-                    <motion.div
-                    layout
-                    className="w-max h-full p-4"
-                    >
-                    {children}
-                    </motion.div>
-                </ScrollArea>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    );
+  setActive,
+  active,
+  item,
+  children,
+}: {
+  setActive: (item: string | null) => void;
+  active: string | null;
+  item: string;
+  children?: React.ReactNode;
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setActive(null);
   };
+
+  useEffect(() => {
+    const menuElement = menuRef.current;
+
+    if (menuElement) {
+      menuElement.addEventListener("mouseleave", handleMouseLeave);
+    }
+
+    return () => {
+      if (menuElement) {
+        menuElement.removeEventListener("mouseleave", handleMouseLeave);
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={menuRef}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        setActive(item);
+      }}
+      className="relative"
+    >
+      <motion.p
+        transition={{ duration: 0.3 }}
+        className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white"
+      >
+        {item}
+      </motion.p>
+      <AnimatePresence>
+        {active === item && isHovered && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: 10 }}
+            transition={transition}
+            className="absolute top-[calc(100%_+_1.2rem)] right-1/2 transform -translate-x-1/2 pt-4 z-50"
+          >
+            <motion.div
+              transition={transition}
+              layoutId="active"
+              className="bg-gray-100 dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl max-h-[80vh] overflow-y-auto"
+            >
+              <ScrollArea className="h-[calc(100vh-10rem)] pb-10 overflow-y-auto">
+                <motion.div layout className="w-max h-full p-4">
+                  {children}
+                </motion.div>
+              </ScrollArea>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 export const Menu = ({
   setActive,

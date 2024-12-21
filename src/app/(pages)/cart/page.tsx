@@ -5,7 +5,6 @@ import { motion } from 'framer-motion'
 import { ShoppingCart } from 'lucide-react'
 import { CartItem } from "@/components/CartItem"
 import { Button } from "@/components/ui/button"
-import { RootState } from '@/store/store'
 import { useFetchProducts } from '@/hooks/useFetchProducts'
 import { useFetchCart } from '@/hooks/useFetchCart'
 import { useEffect, useState } from 'react'
