@@ -107,10 +107,10 @@ export default function StripePage({amount}: {amount: number}) {
     //     },
     // };
     return (
-        <form onSubmit={handleSubmit} className="bg-gradient-to-b from-teal-300 via-cyan-300 to-cyan-400 flex flex-col items-center xl:w-full py-10 px-5 rounded-md">
+        <form onSubmit={handleSubmit} className="bg-gradient-to-b from-teal-300 via-cyan-300 to-cyan-400 flex flex-col items-center xl:w-full py-10 px-5 md:px-10 xl:px-5  rounded-md">
             {clientSecret && <PaymentElement />}
             
-            <Button className="px-20 mt-5 text-white font-semibold bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900"
+            <Button className="px-20 mt-5 text-white font-semibold bg-gradient-to-b from-gray-500 via-gray-800 to-cyan-900 hover:scale-105 hover:from-gray-500 hover:to-cyan-900"
               type="submit"
             >
                 {formLoading ? "Processing..." : `Pay $ ${(amount/100).toFixed(2)}`}

@@ -28,7 +28,7 @@ interface CartItem {
 export default function CartPage() {
     const router = useRouter();
     const { cart, loading: isLoading } = useFetchCart();
-    const { products } = useFetchProducts();
+    const { products, loading} = useFetchProducts();
     const [cartItems, setCartItems] = useState<CartItem[]>([])
     const dispatch = useDispatch();
 
@@ -91,6 +91,10 @@ export default function CartPage() {
         }
       }
 
+      if(loading || isLoading) {
+        return <div>Loaing...</div>
+      }
+
     return (
         <div className="min-h-screen flex flex-col">
         <main className="flex-grow">
@@ -131,11 +135,15 @@ export default function CartPage() {
                     <p className="text-xl font-semibold mb-4">
                         Total: ${totalPrice.toFixed(2)}
                     </p>
-                    <Button size="lg" className="w-full text-white font-semibold bg-gradient-to-b from-teal-600 via-cyan-600 to-cyan-800 hover:scale-105 hover:from-teal-700 hover:to-cyan-900" onClick={() => {
+                    <div className='w-full flex justify-center items-center'>
+                    <Button size="lg" 
+                    className="w-3/5 text-white font-semibold bg-gradient-to-b from-teal-400 via-cyan-500 to-cyan-800 hover:scale-105 hover:from-teal-500 hover:to-cyan-700"
+                    onClick={() => {
                         router.push('/checkout')
                     }}>
                         Proceed to Checkout
                     </Button>
+                    </div>
                     </div>
                 </div>
                 )}
@@ -145,4 +153,6 @@ export default function CartPage() {
         </div>
     )
 }
+
+
 

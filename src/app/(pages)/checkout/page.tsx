@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,6 +13,10 @@ import { countries } from '@/lib/countries'
 import { useFetchCart } from '@/hooks/useFetchCart'
 import { useFetchProducts } from '@/hooks/useFetchProducts'
 import { useRouter } from 'next/navigation'
+import axios from 'axios'
+import { useToast } from '@/hooks/use-toast'
+import { Toaster } from '@/components/ui/toaster'
+import { setCart } from '@/store/slices/cartSlice'
 
 interface CheckoutFormData {
   name: string
@@ -42,6 +46,8 @@ export default function CheckoutPage() {
   const { products } = useFetchProducts();
   const [cartItems, setCartItems] = useState<CartItem []>([])
   const [totalCost, setTotalCost] = useState(0);
+  const {toast} = useToast();
+  const dispatch = useDispatch();
   const { control, handleSubmit, formState: { errors } } = useForm<CheckoutFormData>({
     defaultValues: {
       name: '',
@@ -80,8 +86,34 @@ export default function CheckoutPage() {
     // Here you would typically send the data to your backend
     console.log("DATA:", data)
     if (data.paymentMethod === 'cash') {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      alert('Your order has been placed. You will receive a confirmation email shortly.')
+      const response = await axios.post('/api/order', {
+        ...data,
+        cart: cart,
+        total: totalCost
+      })
+      console.log(response);
+      if (response.status !== 200) {
+        toast({
+          title: 'Error',
+          description: 'An error occurred while placing your order, please try again later.',
+          duration: 5000,
+          variant: 'destructive'
+        })
+        setIsSubmitting(false);
+        return;
+      }
+
+      toast({
+        title: 'Order Placed',
+        description: 'Your order has been placed. You will receive a confirmation email shortly.',
+        duration: 5000,
+      });
+      setIsSubmitting(false)
+      dispatch(setCart([]))
+      // add a wait of 2 seconds before redirecting to the success page
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      router.push("/order-placed")
+      
     }
     else if (data.paymentMethod === 'stripe') {
       router.push("/payment")
@@ -264,6 +296,7 @@ export default function CheckoutPage() {
             </form>
           </div>
         </section>
+        <Toaster />
       </main>
     </div>
   )
