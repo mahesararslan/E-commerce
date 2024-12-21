@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { MoonIcon, SunIcon, ShoppingCart, Heart, User, Search, ChevronDown, Menu } from 'lucide-react'
+import { MoonIcon, SunIcon, ShoppingCart, Heart, User, Search, Menu } from 'lucide-react' 
 import { useTheme } from "next-themes"
 import {
   DropdownMenu,
@@ -29,7 +29,7 @@ import { useDispatch } from 'react-redux'
 import { Cart } from './Cart'
 import { useFetchCart } from '@/hooks/useFetchCart'
 import { Suggestions } from './Suggestions'
-import { MenuItem, ProductItem } from './ProductsNavbar'
+import { Menuu, MenuItem, ProductItem } from './ProductsNavbar'
 
 
 export function Navbar() {
@@ -121,6 +121,7 @@ export function Navbar() {
           {/* Right section */}
           <div className="flex items-center justify-end space-x-4">
             <div className="hidden lg:flex items-center space-x-4">
+              <Menuu setActive={setActive}  >
               <MenuItem setActive={setActive} active={active} item="Products">
                 <div className="text-sm grid grid-cols-2 xl:grid-cols-3 gap-10 p-4">
                   {categories.map((category, index) => (
@@ -135,6 +136,7 @@ export function Navbar() {
                   ))}
                 </div>
               </MenuItem>
+              </Menuu>
               {/* <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
