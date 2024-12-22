@@ -10,6 +10,9 @@ import { Toaster } from '@/components/ui/toaster';
 import axios from 'axios';
 import { OrderDetailsCard } from '@/components/OrderDetailsCard';
 import Link from 'next/link';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Separator } from "@/components/ui/separator"
 
 interface Order {
 
@@ -41,7 +44,7 @@ export default function PaymentSuccessPage() {
   }, [toast]);
 
   if (loading) {
-    return <PaymentSuccessSkeleton />;
+    return <OrderDetailsCardSkeleton />;
   }
 
   return (
@@ -111,4 +114,50 @@ export function PaymentSuccessSkeleton() {
       </div>
     </div>
   );
+}
+
+function OrderDetailsCardSkeleton() {
+  return (
+    <Card className="w-full max-w-2xl mx-auto">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold">
+          <Skeleton className="h-8 w-48" />
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-6 w-24 rounded-full" />
+        </div>
+        <Separator />
+        <div>
+          <Skeleton className="h-6 w-24 mb-2" />
+          {[...Array(3)].map((_, index) => (
+            <div key={index} className="flex justify-between items-center py-2">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          ))}
+        </div>
+        <Separator />
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-6 w-32" />
+          <Skeleton className="h-6 w-24" />
+        </div>
+        <Separator />
+        <div className="grid grid-cols-2 gap-4">
+          {[...Array(6)].map((_, index) => (
+            <div key={index} className="flex items-center">
+              <Skeleton className="h-5 w-5 mr-2" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  )
 }

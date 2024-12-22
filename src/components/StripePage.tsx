@@ -61,9 +61,6 @@ export default function StripePage({amount}: {amount: number}) {
             alert("NONE")
             return; 
         }
-        console.log(elements)
-        console.log("ORDER: ",order);
-        alert("Payment successful, ready to create order");
         const res = await axios.post("/api/order", order);
         if (res.status === 200) {
             dispatch(setCart([]));
