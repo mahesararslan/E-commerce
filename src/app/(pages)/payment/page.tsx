@@ -75,7 +75,7 @@ export default function PaymentPage() {
                       currency: 'usd',
                   }}
               >
-                  <StripePage amount={convertToSubCurrency(Number(amount))} />
+                  <StripePage  amount={convertToSubCurrency(Number(amount))} />
               </Elements> 
           </div>
         </div>

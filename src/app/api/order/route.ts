@@ -17,8 +17,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const { address, city, country, name, paymentMethod, phoneNumber, postalCode, cart, total } = await req.json();
-        console.log("REQ Recieved");
-        
+
         await mongooseConnect();
         const user = await User.findOne({ email: session.user.email });
         if (!user) {
@@ -53,6 +52,47 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({
             order,
+        }, {
+            status: 200,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({
+            status: 500,
+            message: "Internal server error",
+        });
+    }
+}
+
+
+export async function GET(req: NextRequest) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) { 
+        return NextResponse.json({
+            status: 401,
+            message: "Unauthorized",
+        });
+    }
+
+    try {
+        await mongooseConnect();
+        const user = await User.findOne({ email: session.user.email });
+        if (!user) {
+            return NextResponse.json({
+                status: 404,
+                message: "User not found",
+            });
+        }
+
+        // find the latest order for the user
+        const orders = await Order.find({
+            userId: user._id,
+        }).sort({ createdAt: -1 });
+        const order = orders[0];
+
+        return NextResponse.json({
+            order
         }, {
             status: 200,
         });

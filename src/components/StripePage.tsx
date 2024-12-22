@@ -1,11 +1,13 @@
 "use client"
 
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { StripePaymentElementOptions } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "@/store/slices/cartSlice";
+import { RootState } from "@/store/store";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 
 
@@ -18,6 +20,8 @@ export default function StripePage({amount}: {amount: number}) {
     const [loading, setLoading] = useState<boolean>(true);
     const [formLoading, setFormLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const router = useRouter();
+    const order = useSelector((state: RootState) => state.order.order);
 
     useEffect(() => {
         fetch("/api/create-payment-intent", {
@@ -58,54 +62,39 @@ export default function StripePage({amount}: {amount: number}) {
             return; 
         }
         console.log(elements)
+        console.log("ORDER: ",order);
+        alert("Payment successful, ready to create order");
+        const res = await axios.post("/api/order", order);
+        if (res.status === 200) {
+            dispatch(setCart([]));
+        } else {
+            alert("Error creating order");
+            setErrorMessage("Error processing payment");
+        }
 
         const { error } = await stripe.confirmPayment({
             clientSecret,
             elements,
             confirmParams: {
-                return_url: `${window.location.origin}/success`,
-            }
+                return_url: `${window.location.origin}/success` // redirect to order page after payment
+            },
         });
 
         if (error) {
+            alert("Failed Stripe payment");
             setErrorMessage(error.message);
             setFormLoading(false);
             return;
         }
 
-        // create a new order, add the cart items, user id, and amount  
-
-        dispatch(setCart([]));
-
+        
         setFormLoading(false);
     }
 
     if (loading) {
         return <Skeleton />
     }
-
-    // const paymentElementOptions: StripePaymentElementOptions = {
-    //     defaultValues: {
-    //         billingDetails: {
-    //             name: 'John Smith', // Pre-fill example
-    //             email: 'john.smith@example.com',
-    //             phone: '123-456-7890',
-    //             address: {
-    //                 line1: '123 Main Street',
-    //                 city: 'San Francisco',
-    //                 state: 'CA',
-    //                 postal_code: '94111',
-    //                 country: 'US',
-    //             },
-    //         },
-    //     },
-    //     layout: {
-    //         type: 'tabs', // Options: 'tabs', 'accordion', 'auto'
-    //         defaultCollapsed: false, // Optional: whether sections start collapsed
-    //         radios: true, // Optional: Use radio buttons for payment method selection
-    //         spacedAccordionItems: true, // Optional: Adds spacing to accordion items
-    //     },
-    // };
+    
     return (
         <form onSubmit={handleSubmit} className="bg-gradient-to-b from-teal-300 via-cyan-300 to-cyan-400 flex flex-col items-center xl:w-full py-10 px-5 md:px-10 xl:px-5  rounded-md">
             {clientSecret && <PaymentElement />}

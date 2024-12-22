@@ -17,6 +17,7 @@ import axios from 'axios'
 import { useToast } from '@/hooks/use-toast'
 import { Toaster } from '@/components/ui/toaster'
 import { setCart } from '@/store/slices/cartSlice'
+import { setOrder } from '@/store/slices/orderSlice'
 
 interface CheckoutFormData {
   name: string
@@ -116,11 +117,18 @@ export default function CheckoutPage() {
       
     }
     else if (data.paymentMethod === 'stripe') {
+      const payload = {
+        ...data,
+        cart: cart,
+        total: totalCost
+      }
+      
+      console.log("PAYLOAD FROM CHECKOUT PAGE: ",payload)
+      dispatch(setOrder(payload));
+      
       router.push("/payment")
     }
-    // Simulate API call
     setIsSubmitting(false)
-    // Handle response, e.g., redirect to confirmation page
   }
 
   return (

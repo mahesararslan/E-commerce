@@ -16,6 +16,7 @@ interface CartItem {
     id: string
     name: string
     price: number
+    salePrice?: number
     image: string
     quantity: number
   }
@@ -37,14 +38,17 @@ export default function CartPage() {
         const items = cart.map(({ productId, quantity }) => {
             const product = products.find((p) => p._id === productId);
             return product
-                ? { ...product, id: productId, quantity, image: product.images[0] }
+                ? { ...product, id: productId, quantity, image: product.images[0], salePrice: product.isOnSale ? product.salePrice : null }
                 : null;
         });
 
         setCartItems(items.filter(Boolean) as CartItem[]);
     }, [cart, products]);
 
-    const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    const totalPrice = cartItems.reduce(
+      (sum, item) => sum + (item.salePrice ?? item.price) * item.quantity,
+      0
+    );
 
     
       const updateQuantity = async (itemId: string, newQuantity: number) => {
@@ -124,6 +128,7 @@ export default function CartPage() {
                             id={item.id}
                             name={item.name}
                             price={item.price}
+                            salePrice={item.salePrice}
                             image={item.image}
                             quantity={item.quantity}
                             updateQuantity={updateQuantity}

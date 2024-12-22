@@ -8,20 +8,21 @@ interface CartItemProps {
   id: string
   name: string
   price: number
+  salePrice?: number
   image: string
   quantity: number
   updateQuantity: (itemId: string, newQuantity: number) => void
   removeItem: (itemId: string) => void
 }
 
-export function CartItem({ id, name, price, image, quantity, updateQuantity, removeItem }: CartItemProps) {
+export function CartItem({ id, name, price, salePrice, image, quantity, updateQuantity, removeItem }: CartItemProps) {
 
   return (
     <div className="flex items-center space-x-4 py-4 border-b">
       <Image src={image} alt={name} width={80} height={80} className="rounded-md" />
       <div className="flex-grow">
         <h3 className="font-semibold">{name}</h3>
-        <p className="text-sm text-muted-foreground">${price.toFixed(2)}</p>
+        <p className="text-sm text-muted-foreground">${salePrice ? salePrice.toFixed(2) : price.toFixed(2)}</p>
       </div>
       <div className="flex items-center space-x-2">
         <Button variant="outline" size="icon" onClick={() => updateQuantity(id, Math.max(1, quantity - 1))}>

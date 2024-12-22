@@ -18,6 +18,7 @@ interface CartItem {
   id: string
   name: string
   price: number
+  salePrice?: number
   image: string
   quantity: number
 }
@@ -41,7 +42,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
     const items = cart.map(({ productId, quantity }) => {
       const product = products.find((p) => p._id === productId);
       return product
-        ? { ...product, id: productId, quantity, image: product.images[0] }
+        ? { ...product, id: productId, quantity, image: product.images[0], salePrice: product.isOnSale ? product.salePrice : null }
         : null;
     });
     
@@ -93,7 +94,11 @@ export function Cart({ isOpen, onClose }: CartProps) {
     }
   }
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const totalPrice = cartItems.reduce(
+    (sum, item) => sum + (item.salePrice ?? item.price) * item.quantity,
+    0
+  );
+  
 
   return (
     <AnimatePresence>
@@ -123,7 +128,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
                   <Image src={item.image} alt={item.name} width={60} height={60} className="rounded-md" />
                   <div className="flex-grow">
                     <h3 className="font-medium">{item.name}</h3>
-                    <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                    <p className="text-sm text-muted-foreground">${item.salePrice ? item.salePrice.toFixed(2) : item.price.toFixed(2)}</p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button variant="outline" size="icon" onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}>
