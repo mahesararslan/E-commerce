@@ -103,17 +103,11 @@ export default function CheckoutPage() {
         setIsSubmitting(false);
         return;
       }
-
-      toast({
-        title: 'Order Placed',
-        description: 'Your order has been placed. You will receive a confirmation email shortly.',
-        duration: 5000,
-      });
       setIsSubmitting(false)
       dispatch(setCart([]))
       // add a wait of 2 seconds before redirecting to the success page
       await new Promise((resolve) => setTimeout(resolve, 2000))
-      router.push("/order-placed")
+      router.push("/success")
       
     }
     else if (data.paymentMethod === 'stripe') {

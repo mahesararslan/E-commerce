@@ -10,6 +10,10 @@ import axios from 'axios'
 import { useFetchWishlist } from '@/hooks/useFetchWishlist'
 import { useDispatch } from 'react-redux'
 import { addToWishlistAsync, removeFromWishlistAsync } from '@/store/slices/wishlistSlice'
+import { useFetchCart } from '@/hooks/useFetchCart'
+import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
+import { useToast } from '@/hooks/use-toast'
+import { Toaster } from './ui/toaster'
 
 interface ProductInfoProps {
   product: {
@@ -25,9 +29,11 @@ interface ProductInfoProps {
 export function ProductInfo({ product, session }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1) // @ts-ignore
   const Rating: number = product.rating ? product.rating.toFixed(1): Number((4 + Math.random()).toFixed(1))
+  const { cart } = useFetchCart();
   const { wishlist, loading } = useFetchWishlist();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
   useEffect(() => {
     setIsWishlisted(wishlist.includes(product._id));
@@ -61,10 +67,37 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
   const incrementQuantity = () => setQuantity(prev => prev + 1)
   const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1))
 
-  const addToCart = () => {
-    // Implement add to cart functionality
-    console.log(`Added ${quantity} of ${product.name} to cart`)
-  }
+  const addToCart = async (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      try { // @ts-ignore
+        if (cart.length !== 0 && session?.user?.email) {
+          const cartItem = cart.find((item) => item.productId === product._id);
+          if (cartItem) {
+            const newQuantity = cartItem.quantity + quantity; // @ts-ignore
+            dispatch(updateQuantityAsync({ productId: product._id, quantity: newQuantity }));
+            toast({
+              title: 'Success',
+              description: 'Added to cart successfully',
+            });
+            return;
+          }
+        }
+        const props = {productId: product._id, quantity: quantity}; // @ts-ignore
+        dispatch(addToCartAsync(props));
+        toast({
+          title: 'Success',
+          description: 'Added to cart successfully',
+        });
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: 'Failed to add to cart. Please try again.',
+          variant: 'destructive',
+        });
+        console.error('Error adding to cart:', error);
+      }
+    }
 
   return (
     <div className="space-y-6">
@@ -97,6 +130,7 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
           <Heart className="mr-2 h-4 w-4" /> {isWishlisted ? "Remove" : "Wishlist"}
         </Button>
       </div>
+      <Toaster />
     </div>
   )
 }

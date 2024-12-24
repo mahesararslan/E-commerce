@@ -2,8 +2,8 @@
 
 import { useSelector, useDispatch } from 'react-redux'
 import { motion } from 'framer-motion'
-import { ShoppingCart } from 'lucide-react'
-import { CartItem } from "@/components/CartItem"
+import { ShoppingCart, Trash2 } from 'lucide-react'
+import { CartItem, CartItemCustom } from "@/components/CartItem"
 import { Button } from "@/components/ui/button"
 import { useFetchProducts } from '@/hooks/useFetchProducts'
 import { useFetchCart } from '@/hooks/useFetchCart'
@@ -124,7 +124,7 @@ export default function CartPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <CartItem
+                        <CartItemCustom
                             id={item.id}
                             name={item.name}
                             price={item.price}
@@ -137,18 +137,28 @@ export default function CartPage() {
                     </motion.div>
                     ))}
                     <div className="mt-8 flex flex-col items-end">
-                    <p className="text-xl font-semibold mb-4">
-                        Total: ${totalPrice.toFixed(2)}
-                    </p>
-                    <div className='w-full flex justify-center items-center'>
-                    <Button size="lg" 
-                    className="w-3/5 text-white font-semibold bg-gradient-to-b from-teal-400 via-cyan-500 to-cyan-800 hover:scale-105 hover:from-teal-500 hover:to-cyan-700"
-                    onClick={() => {
-                        router.push('/checkout')
-                    }}>
-                        Proceed to Checkout
-                    </Button>
-                    </div>
+                      <div className="flex items-center justify-between w-full py-6">
+                          <p className="font-manrope font-bold text-3xl leading-9 text-gray-900 dark:text-gray-200">Total</p>
+                          <h6 className="font-manrope font-bold text-3xl leading-9 text-cyan-600 dark:text-cyan-500">$405.00</h6>
+                      </div>
+                      <div className="w-full flex items-center flex-col sm:flex-row justify-center gap-3 mt-8">
+                        <button
+                            onClick={clearCart}
+                            className="rounded-full py-4 w-full max-w-[280px]  flex items-center bg-teal-50 justify-center transition-all duration-500 hover:bg-cyan-100">
+                            <span className="px-2 font-semibold text-lg leading-8 text-cyan-600 dark:text-cyan-500">Clear Cart</span>
+                            <Trash2 className="h-4 w-4 text-cyan-600 dark:text-cyan-500 scale-110 " />
+                        </button>
+                        <button
+                            onClick={() => router.push('/checkout')}
+                            className="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-cyan-600 font-semibold text-lg text-white flex transition-all duration-500 hover:bg-cyan-700">Continue
+                            to Checkout
+                            <svg className="ml-2" xmlns="http://www.w3.org/2000/svg" width="23" height="22" viewBox="0 0 23 22"
+                                fill="none">
+                                <path d="M8.75324 5.49609L14.2535 10.9963L8.75 16.4998" stroke="white" strokeWidth="1.6"
+                                    strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                      </div>
                     </div>
                 </div>
                 )}

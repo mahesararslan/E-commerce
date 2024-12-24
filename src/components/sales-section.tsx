@@ -40,7 +40,7 @@ export function SalesSection() {
           const cartItem = cart.find((item) => item.productId === id);
           if (cartItem) {
             const newQuantity = cartItem.quantity + 1; // @ts-ignore
-            dispatch(updateQuantityAsync({ productId: _id, quantity: newQuantity }));
+            dispatch(updateQuantityAsync({ productId: id, quantity: newQuantity }));
             return;
           }
         }
