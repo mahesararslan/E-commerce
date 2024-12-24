@@ -1,3 +1,4 @@
+import { create } from "domain";
 import { model, models, Schema } from "mongoose";
 
 const customUserSchema = new Schema({
@@ -58,6 +59,10 @@ const customUserSchema = new Schema({
       },
     },
   ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 export const User =  models.CustomUser || model('CustomUser', customUserSchema);
