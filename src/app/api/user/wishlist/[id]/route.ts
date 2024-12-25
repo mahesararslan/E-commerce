@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 
-export async function DELETE(request: Request, context: { params: { id: string } }) {
+export async function DELETE(request: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
         return NextResponse.json({
@@ -16,7 +16,8 @@ export async function DELETE(request: Request, context: { params: { id: string }
     }
 
     try {
-        const { id } = await context.params;
+        const url = new URL(request.url);
+        const id = url.pathname.split("/").pop();
         console.log("Session User: ", session?.user);
 
         await mongooseConnect();

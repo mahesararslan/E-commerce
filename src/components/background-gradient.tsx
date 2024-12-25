@@ -41,3 +41,23 @@ export function BackgroundGradientCards({ id, title, description, url } : { id:s
     </div>
   );
 }
+
+export function CardSkeleton() {
+  return (
+    <div className="h-full">
+      <BackgroundGradient className="h-full rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900">
+        <div className="h-full flex flex-col justify-between" >
+          <div>
+            <div className="animate-pulse bg-gray-300 dark:bg-gray-700 h-40 w-40 rounded-[22px]"></div>
+          </div>
+          <div>
+            <div className="animate-pulse bg-gray-300 dark:bg-gray-700 h-4 w-20 rounded-md mt-4"></div>
+            <div className="animate-pulse bg-gray-300 dark:bg-gray-700 h-4 w-40 rounded-md mt-2"></div>
+            <div className="animate-pulse bg-gray-300 dark:bg-gray-700 h-4 w-20 rounded-md mt-2"></div>
+            <div className="animate-pulse bg-gray-300 dark:bg-gray-700 h-8 w-20 rounded-md mt-4"></div>
+          </div>
+        </div>
+      </BackgroundGradient>
+    </div>
+  );
+}

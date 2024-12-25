@@ -3,7 +3,7 @@
 import React, { useCallback } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { BackgroundGradientCards } from '@/components/background-gradient'
+import { BackgroundGradientCards, CardSkeleton } from '@/components/background-gradient'
 import { Button } from './ui/button'
 
 interface Product {
@@ -28,6 +28,10 @@ export function CategoryCarousel({ products }: ProductCarouselProps) {
   const scrollNext = useCallback(() => {
     if (emblaApi) emblaApi.scrollNext()
   }, [emblaApi])
+
+  if(products.length === 0) {
+    return <Skeleton />
+  }
 
   return (
     <div className="relative">
@@ -64,4 +68,24 @@ export function CategoryCarousel({ products }: ProductCarouselProps) {
     </div>
   )
 }
+
+// skeleton for the category carousel
+
+function Skeleton() {
+  return (
+    <div className="relative">
+      <div className="overflow-hidden">
+        <div className="flex">
+          {[1, 2, 3, 4, 5].map((_, i) => (
+            <div key={i} className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] md:flex-[0_0_33.33%] lg:flex-[0_0_25%] px-4">
+              <CardSkeleton />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
 

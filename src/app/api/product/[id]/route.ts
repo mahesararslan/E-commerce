@@ -1,14 +1,12 @@
 import { mongooseConnect } from "@/lib/mongoose";
-import { Category } from "@/models/category";
 import { Product } from "@/models/product";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request, context: { params: { id: string } }) {
-    // @ts-ignore
-    const { id } = await context.params;
-    console.log("ID FROM ROUTE: ", id);
+export async function GET(request: NextRequest) {
 
     try {
+        const url = new URL(request.url);
+        const id = url.pathname.split("/").pop();
         await mongooseConnect();
         const product = await Product.findById(id);
 

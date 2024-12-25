@@ -78,8 +78,8 @@ export default function SignIn() {
       </form>
       <div className="mt-4 text-center">
         <p className="text-sm text-muted-foreground">
-          Don't have an account?{' '}
-          <Link href="/signup" className="text-primary hover:underline">
+          Don&apos;t have an account?
+          <Link href="/signup" className="mr-2 text-primary hover:underline">
             Sign Up
           </Link>
         </p>

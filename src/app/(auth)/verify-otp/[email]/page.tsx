@@ -1,19 +1,15 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { AuthLayout } from '@/components/AuthLayout'
 import { OtpInput } from '@/components/otp-input'
 import { Button } from '@/components/ui/button'
 import { useToast } from "@/hooks/use-toast"
 import axios from 'axios'
-import { useSession } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import { Toaster } from '@/components/ui/toaster'
-import { set } from 'mongoose'
 
 export default function VerifyOtp() {
-  const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast();
     const router = useRouter();
     const { email }: { email:string } = useParams();
@@ -21,26 +17,24 @@ export default function VerifyOtp() {
     
 
   const handleOtpComplete = async (otp: string) => {
-    setIsLoading(true)
+    
     // Here you would typically send the OTP to your backend for verification
     console.log('OTP submitted:', otp)
     
     // @ts-ignore
     const response = await axios.post('/api/verify-otp', { email: decodedEmail, otp })
-    if (response.status !== 200) {
+    if (response.status !== 200) {    
       toast({
         title: "Invalid OTP",
         description: "Please try again",
         variant: "destructive",
       })
-      setIsLoading(false)
       setTimeout(() => {
         router.push('/signin')
       }, 2000)
       return
     }
     
-    setIsLoading(false)
     toast({
       title: "OTP Verified",
       description: "Your account has been successfully verified.",

@@ -156,3 +156,21 @@ export function TopProductCard({ _id, name, price, salePrice, images, rating }: 
       </Link>
   );
 }
+
+
+export function ProductCardSkeleton() {
+  return (
+    <div className="bg-card text-card-foreground rounded-xl shadow-lg overflow-hidden flex flex-col h-full min-w-[300px] dark:border-x-2">
+      <div className="aspect-square bg-gray-300 animate-pulse" />
+      <div className="p-4 flex-grow flex flex-col justify-between">
+        <div>
+          <div className="bg-gray-300 h-4 w-3/4 mb-2 animate-pulse" />
+          <div className="bg-gray-300 h-4 w-1/2 animate-pulse" />
+        </div>
+        <div className="mt-4 w-full">
+          <div className="bg-gray-300 h-10 w-full animate-pulse" />
+        </div>
+      </div>
+    </div>
+  );
+}

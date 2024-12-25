@@ -1,36 +1,34 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useFetchProducts } from '@/hooks/useFetchProducts'
-import { motion } from 'framer-motion'
-import { ProductCard } from '@/components/product-card'
-import { useSearchParams } from 'next/navigation'
+import { useEffect, useState, Suspense } from "react";
+import { useFetchProducts } from "@/hooks/useFetchProducts";
+import { motion } from "framer-motion";
+import { ProductCard } from "@/components/product-card";
+import { useSearchParams } from "next/navigation";
 
-
-export default function SearchPage() {
-  const router = useRouter()
+function SearchPageContent() {
   const searchParams = useSearchParams();
-  const searchQuery = searchParams.get('q');
+  const searchQuery = searchParams.get("q");
   const { products, loading } = useFetchProducts();
-  const [filteredProducts, setFilteredProducts] = useState(products)
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
   useEffect(() => {
     if (searchQuery && products.length > 0) {
       setFilteredProducts(
-        products.filter((product) => // @ts-ignore
-          product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        products.filter(
+          (product) =>
+            product.name?.toLowerCase().includes(searchQuery.toLowerCase()) // @ts-ignore
         )
-      )
+      );
     }
-  }, [searchQuery, products])
+  }, [searchQuery, products]);
 
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
         <section className="py-16 bg-gradient-to-b from-background to-muted">
           <div className="container mx-auto px-4">
-            <motion.h1 
+            <motion.h1
               className="text-4xl md:text-5xl font-bold text-center mb-12"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -65,6 +63,13 @@ export default function SearchPage() {
         </section>
       </main>
     </div>
-  )
+  );
 }
 
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
+  );
+}

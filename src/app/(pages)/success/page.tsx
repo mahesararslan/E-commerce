@@ -93,7 +93,7 @@ export default function PaymentSuccessPage() {
 }
 
 // make a skeleton for the payment success page
-export function PaymentSuccessSkeleton() {
+function PaymentSuccessSkeleton() {
   return (
     <div className="my-20 p-8 mx-auto px-4 py-8 flex justify-center items-center">
       <div className="flex flex-col items-center w-fit border-2 shadow-xl p-8 rounded-lg">
@@ -112,6 +112,7 @@ export function PaymentSuccessSkeleton() {
           Home
         </Button>
       </div>
+      <Toaster />
     </div>
   );
 }

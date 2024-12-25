@@ -25,7 +25,7 @@ interface Product {
 
 
 export function SalesSection() {
-  const { products } = useFetchProducts();
+  const { products, loading } = useFetchProducts();
   const { cart } = useFetchCart();
   const [hoveredDeal, setHoveredDeal] = useState<string | null>(null)
   const dispatch = useDispatch();
@@ -50,6 +50,8 @@ export function SalesSection() {
         console.error('Error adding to cart:', error);
       }
     }
+
+    if (loading) return <SalesSkeleton />
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-primary/10">
@@ -136,3 +138,61 @@ export function SalesSection() {
   )
 }
 
+function SalesSkeleton() {
+
+  return (
+    <section className="py-20 bg-gradient-to-b from-background to-primary/10">
+      <div className="container mx-auto px-4">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="w-1/2 h-10 bg-gray-300 animate-pulse mb-4 mx-auto"></div>
+          <div className="w-3/4 h-8 bg-gray-300 animate-pulse mx-auto"></div>
+        </motion.div>
+  
+        <div className="mb-12">
+          <h3 className="text-2xl font-bold mb-6 text-foreground text-center">
+            BesT Deals
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <div className="overflow-hidden">
+                  <div className="w-full h-48 bg-gray-300 animate-pulse"></div>
+                  <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm font-bold text-white">
+                    <div className="w-12 h-6 bg-gray-300 animate-pulse"></div>
+                  </div>
+                  <div className="p-4">
+                  <Button className="w-full text-foreground hover:text-white" variant="default" >
+                    Add to Cart
+                  </Button>  
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+  
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <Button className=" text-foreground hover:text-white" variant="default" >
+            View All Deals
+          </Button>  
+        </motion.div>
+      </div>
+    </section>
+  );
+  
+}

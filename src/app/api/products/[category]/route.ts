@@ -4,12 +4,12 @@ import { Product } from "@/models/product";
 import { NextRequest, NextResponse } from "next/server";
 
 // get products of a specific category.
-export async function GET(request: Request, context: { params: { category: string } }) {
-        
-        const { category } = await context.params;
+export async function GET(request: NextRequest) {
     
     console.log("GET_category");
     try {
+        const url = new URL(request.url);
+        const category = url.pathname.split("/").pop();
         await mongooseConnect();
         
         // Find the current category and its subcategories
