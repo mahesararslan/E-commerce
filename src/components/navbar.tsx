@@ -123,7 +123,7 @@ export function Navbar() {
             <div className="hidden lg:flex items-center space-x-4">
               <Menuu setActive={setActive}  >
               <MenuItem setActive={setActive} active={active} item="Products">
-                <div className="text-sm grid grid-cols-2 xl:grid-cols-3 gap-10 p-4">
+                <div className="text-sm grid grid-cols-2 xl:grid-cols-2 gap-10 p-4">
                   {categories.map((category, index) => (
                     <ProductItem
                       key={category._id} // It's good practice to add a key when mapping item
