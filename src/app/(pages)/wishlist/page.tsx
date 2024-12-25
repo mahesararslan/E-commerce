@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { motion } from 'framer-motion'
-import { WishlistCard } from "@/components/WishlistCard"
+import { WishlistCard, WishlistCardSkeleton } from "@/components/WishlistCard"
 import { useSession } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,6 +14,7 @@ import { useFetchCart } from '@/hooks/useFetchCart'
 import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
 import { useFetchWishlist } from '@/hooks/useFetchWishlist'
 import { useFetchProducts } from '@/hooks/useFetchProducts'
+import { useRouter } from 'next/navigation'
 
 interface Product {
   id: string
@@ -30,6 +31,7 @@ export default function WishlistPage() {
   const {wishlist, loading:isLoading} = useFetchWishlist();
   const dispatch = useDispatch()
   const { data: session } = useSession()
+  const router = useRouter()
   const { toast } = useToast()
   const { cart } = useFetchCart();
 
@@ -73,6 +75,16 @@ export default function WishlistPage() {
       console.error('Error removing from wishlist:', error);
     }
   };
+  
+  useEffect(() => {
+    if (!session?.user) {
+      router.push('/signin');
+    }
+  }, [session, router]);
+
+  if(isLoading) {
+    return <WishlistPageSkeleton />
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-muted dark:bg-background">
@@ -123,3 +135,22 @@ export default function WishlistPage() {
   )
 }
 
+// skeleton
+export function WishlistPageSkeleton() {
+  return (
+    <div className="min-h-screen flex flex-col bg-muted dark:bg-background">
+      <main className="flex-grow">
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-center mb-12">Your Wishlist</h1>
+            <div className="space-y-4">
+              <WishlistCardSkeleton />
+              <WishlistCardSkeleton />
+              <WishlistCardSkeleton />
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  )
+}

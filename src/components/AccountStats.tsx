@@ -2,15 +2,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import axios from "axios";
 import { CalendarDays, ShoppingBag, DollarSign } from 'lucide-react'
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 
 export function AccountStats({createdAt}: {createdAt?: Date}) {
   const [date, setDate] = useState<Date>(createdAt || new Date());
   const [orders, setOrders] = useState([]);
   const [totalSpent, setTotalSpent] = useState(0);
+  const { data: session } = useSession()
+    const router = useRouter()
+  
+    useEffect(() => {
+      if(!session?.user?.email) {
+        router.push('/signin')
+        return;
+      }
+    }, [session])
 
   useEffect(() => {
     const fetchOrders = async () => {
+      if(!session?.user?.email) return;
       const response = await axios.get('/api/orders')
       setOrders(response.data.orders)
     }

@@ -1,12 +1,14 @@
 "use client"
 import StripePage from '@/components/StripePage';
+import { Button } from '@/components/ui/button';
 import { useFetchCart } from '@/hooks/useFetchCart';
 import { useFetchProducts } from '@/hooks/useFetchProducts';
 import convertToSubCurrency from '@/lib/convertToSubCurrency';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 
@@ -27,6 +29,8 @@ if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export default function PaymentPage() {
+    const { data: session } = useSession();
+    const router = useRouter();
     const { products } = useFetchProducts();
       const {cart} = useFetchCart();
       const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -51,6 +55,15 @@ export default function PaymentPage() {
             setAmount(total);
           }
         }, [cartItems]);
+
+        if(!session?.user) {
+          return (
+            <div className="min-h-screen flex flex-col justify-center items-center">
+              <h1 className="text-3xl font-semibold">You need to be logged in to checkout</h1>
+              <Button onClick={() => router.push('/signin')} className="mt-4 px-10 hover:scale-110">Login</Button>
+            </div>
+          )
+        }
 
         if(!amount) {
             return <div>Loading...</div>
@@ -84,4 +97,3 @@ export default function PaymentPage() {
     )
 
 }
-

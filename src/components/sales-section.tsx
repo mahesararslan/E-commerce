@@ -12,6 +12,7 @@ import { useFetchCart } from '@/hooks/useFetchCart'
 import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
 import { useDispatch } from 'react-redux'
 import { useSession } from 'next-auth/react'
+import { SignInPopup } from './SigninPopup'
 
 interface Product {
   _id: string;
@@ -30,11 +31,18 @@ export function SalesSection() {
   const [hoveredDeal, setHoveredDeal] = useState<string | null>(null)
   const dispatch = useDispatch();
   const { data: session } = useSession();
+  const [showSignInPopup, setShowSignInPopup] = useState(false);
 
   
     const addToCart = async (e: React.MouseEvent, id: string) => {
       e.preventDefault();
       e.stopPropagation();
+
+      if (!session?.user?.email) {
+        setShowSignInPopup(true);
+        return;
+      }
+
       try { // @ts-ignore
         if (cart.length !== 0 && session?.user?.email) {
           const cartItem = cart.find((item) => item.productId === id);
@@ -134,6 +142,7 @@ export function SalesSection() {
           </CustomButton>
         </motion.div>
       </div>
+      <SignInPopup isOpen={showSignInPopup} onClose={() => setShowSignInPopup(false)} />
     </section>
   )
 }

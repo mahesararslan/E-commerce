@@ -16,6 +16,7 @@ import { useFetchWishlist } from '@/hooks/useFetchWishlist';
 import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice';
 import { useFetchCart } from '@/hooks/useFetchCart';
 import { useRouter } from 'next/navigation';
+import { SignInPopup } from './SigninPopup';
 
 interface TopProductCardProps {
   _id: string;
@@ -36,6 +37,7 @@ export function TopProductCard({ _id, name, price, salePrice, images, rating }: 
   const displayRating = rating || 4 + Math.random();
   const { data: session } = useSession();
   const router = useRouter();
+  const [showSignInPopup, setShowSignInPopup] = useState(false);
 
   useEffect(() => {
     if(wishlist.length !== 0 && session?.user?.email) {
@@ -44,6 +46,7 @@ export function TopProductCard({ _id, name, price, salePrice, images, rating }: 
   }, [wishlist, _id]);
 
   const addsToWishlist = async () => {
+
     try { // @ts-ignore
       dispatch(addToWishlistAsync(_id));
     } catch (error) {
@@ -61,6 +64,12 @@ export function TopProductCard({ _id, name, price, salePrice, images, rating }: 
 
   const toggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent Link navigation
+
+    if (!session?.user?.email) {
+      setShowSignInPopup(true);
+      return;
+    }
+
     if (isWishlisted) {
       removesFromWishlist();
     } else {
@@ -75,6 +84,12 @@ export function TopProductCard({ _id, name, price, salePrice, images, rating }: 
   const addToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!session?.user?.email) {
+      setShowSignInPopup(true);
+      return;
+    }
+
     try { // @ts-ignore
       if (cart.length !== 0 && session?.user?.email) {
         const cartItem = cart.find((item) => item.productId === _id);
@@ -92,6 +107,7 @@ export function TopProductCard({ _id, name, price, salePrice, images, rating }: 
   }
 
   return (
+    <div>
     <Link href={`/product/${_id}`}>
       <motion.div
         className="bg-card text-card-foreground rounded-xl shadow-lg overflow-hidden flex flex-col h-full min-w-[300px] dark:border-x-2"
@@ -154,6 +170,8 @@ export function TopProductCard({ _id, name, price, salePrice, images, rating }: 
         </div>
       </motion.div>
       </Link>
+      <SignInPopup isOpen={showSignInPopup} onClose={() => setShowSignInPopup(false)} />
+      </div>
   );
 }
 

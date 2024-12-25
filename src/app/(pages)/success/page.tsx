@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
+import { useSession } from 'next-auth/react';
 
 interface Order {
 
@@ -21,6 +22,7 @@ interface Order {
 export default function PaymentSuccessPage() {
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState<any>();
+  const { data: session } = useSession();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -42,6 +44,12 @@ export default function PaymentSuccessPage() {
       duration: 5000,
     });
   }, [toast]);
+
+  useEffect(() => {
+    if (!session?.user) {
+      router.push('/signin');
+    }
+  }, [session, router]);
 
   if (loading) {
     return <OrderDetailsCardSkeleton />;

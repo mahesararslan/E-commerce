@@ -45,3 +45,26 @@ export function ProductFilters({ onSortChange, onSaleFilterChange }: ProductFilt
     </div>
   )
 }
+
+
+export function ProductFiltersSkeleton() {
+  return (
+    <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+      <div className="flex items-center space-x-2">
+        <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          On Sale Only
+        </Label>
+        <Switch disabled />
+      </div>
+      <Select disabled>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Sort by" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="price_asc">Price: Low to High</SelectItem>
+          <SelectItem value="price_desc">Price: High to Low</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  )
+}

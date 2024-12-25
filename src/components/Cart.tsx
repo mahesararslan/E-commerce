@@ -36,6 +36,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
   const { toast } = useToast()
   const dispatch = useDispatch()
   const router = useRouter()
+  
 
   useEffect(() => {
     if (!cart || !products || cart.length === 0 || products.length === 0) return;

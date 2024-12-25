@@ -3,12 +3,14 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ProductCard } from '@/components/product-card';
+import { ProductCard, ProductCardSkeleton } from '@/components/product-card';
 import { Pagination } from '@/components/pagination';
 import { ProductFilters } from '@/components/ProductFilters';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { useFetchProducts } from '@/hooks/useFetchProducts';
 import Link from 'next/link';
+import { Sign } from 'crypto';
+import { SignInPopup } from '@/components/SigninPopup';
 
 interface Product {
   _id: string;
@@ -26,7 +28,7 @@ export default function AllProductsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-
+  const [showSignInPopup, setShowSignInPopup] = useState(false);
   // State for filters
   const [sortBy, setSortBy] = useState<string>(''); // '' | 'priceAsc' | 'priceDesc'
   const [saleOnly, setSaleOnly] = useState<boolean>(false);
@@ -79,6 +81,10 @@ export default function AllProductsPage() {
     setCurrentPage(page);
   };
 
+  if(loading) {
+    return <AllProductsPageSkeleton />;
+  } 
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
@@ -103,7 +109,7 @@ export default function AllProductsPage() {
 
             {/* Products Grid */}
             { !loading && filteredProducts.length === 0 ? (
-              <p className="text-center">No products found...</p>
+              <p></p>
             ) : (
               <>
                 <div
@@ -125,6 +131,7 @@ export default function AllProductsPage() {
                         salePrice={product.salePrice}
                         images={product.images}
                         rating={product.rating}
+                        setShowSignInPopup={setShowSignInPopup}
                       />
                       </Link>
                     </motion.div>
@@ -137,6 +144,44 @@ export default function AllProductsPage() {
                 />
               </>
             )}
+          </div>
+        </section>
+      </main>
+      <SignInPopup isOpen={showSignInPopup} onClose={() => setShowSignInPopup(false)} />
+    </div>
+  );
+}
+
+// skeleton
+export function AllProductsPageSkeleton() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-grow">
+        <section className="py-16 bg-gradient-to-b from-background to-muted">
+          <div className="container mx-auto px-4">
+            <motion.h1
+              className="text-4xl md:text-5xl font-bold text-center mb-12"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              All Products
+            </motion.h1>
+
+            <ProductFilters onSortChange={() => {}} onSaleFilterChange={() => {}} />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <ProductCardSkeleton /> 
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
       </main>

@@ -2,10 +2,7 @@ import Image from 'next/image'
 import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import { Trash2, Plus, Minus } from 'lucide-react'
-import { clearCartAsync, removeFromCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
 import { useState } from 'react'
-import { set } from 'mongoose'
-
 interface CartItemProps {
   id: string
   name: string
@@ -111,5 +108,24 @@ export function CartItemCustom({ id, name, price, salePrice, image, quantity, up
                     </Button>
                 </div>
             </div>
+  )
+}
+
+// skeleton
+export function CartItemSkeleton() {
+  return (
+    <div className="flex items-center space-x-4 py-4 border-b">
+      <div className="w-16 h-16 bg-gray-200 rounded-md" />
+      <div className="flex-grow">
+        <div className="w-32 h-4 bg-gray-200 rounded-md" />
+        <div className="w-16 h-4 bg-gray-200 rounded-md mt-2" />
+      </div>
+      <div className="flex items-center space-x-2">
+        <div className="w-8 h-8 bg-gray-200 rounded-md" />
+        <span className="w-8 h-4 bg-gray-200 rounded-md" />
+        <div className="w-8 h-8 bg-gray-200 rounded-md" />
+      </div>
+      <div className="w-8 h-8 bg-gray-200 rounded-md" />
+    </div>
   )
 }

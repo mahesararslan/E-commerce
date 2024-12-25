@@ -6,10 +6,11 @@ import { motion } from 'framer-motion'
 import { useParams } from 'next/navigation'
 import axios from 'axios'
 import Link from 'next/link'
-import { ProductCard } from "@/components/product-card"
+import { ProductCard, ProductCardSkeleton } from "@/components/product-card"
 import { Pagination } from "@/components/pagination"
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver"
-import { ProductFilters } from '@/components/ProductFilters'
+import { ProductFilters, ProductFiltersSkeleton } from '@/components/ProductFilters'
+import { SignInPopup } from '@/components/SigninPopup'
 
 const ITEMS_PER_PAGE = 6
 
@@ -20,7 +21,8 @@ export default function CategoryPage() {
   const [categoryName, setCategoryName] = useState('')
   const [loading, setLoading] = useState(true)
   const [sort, setSort] = useState('price_asc')
-  const [saleOnly, setSaleOnly] = useState(false)
+  const [saleOnly, setSaleOnly] = useState(false);
+  const [showSignInPopup, setShowSignInPopup] = useState(false);
 
   // Fetch products and category name
   useEffect(() => {
@@ -69,6 +71,10 @@ export default function CategoryPage() {
     triggerOnce: true,
   })
 
+  if(loading) {
+    return <CategoryPageSkeleton />
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
@@ -111,6 +117,7 @@ export default function CategoryPage() {
                         salePrice={product.salePrice}
                         images={product.images}
                         rating={product.rating}
+                        setShowSignInPopup={setShowSignInPopup}
                       />
                     </Link>
                   </motion.div>
@@ -122,6 +129,31 @@ export default function CategoryPage() {
               totalPages={totalPages}
               onPageChange={setCurrentPage}
             />
+          </div>
+        </section>
+      </main>
+      <SignInPopup isOpen={showSignInPopup} onClose={() => setShowSignInPopup(false)} />
+    </div>
+  )
+}
+
+// skeleton
+export function CategoryPageSkeleton() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-grow">
+        <section className="py-16 bg-gradient-to-b from-background to-muted">
+          <div className="container mx-auto px-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-center mb-12">Category Name</h1>
+            <ProductFiltersSkeleton />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {[...Array(8)].map((_, index) => (
+                <div key={index}>
+                  <ProductCardSkeleton />
+                </div>
+              ))}
+            </div>
+            {/* <PaginationSkeleton /> */}
           </div>
         </section>
       </main>

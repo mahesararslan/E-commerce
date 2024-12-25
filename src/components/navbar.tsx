@@ -183,8 +183,9 @@ export function Navbar() {
                     </AvatarFallback>
                   </Avatar>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>{session?.user?.name || ""}</DropdownMenuLabel>
+                  <DropdownMenuContent align="end"> 
+                    {/* @ts-ignore */}
+                    <DropdownMenuLabel>{session?.user?.name || (`${session?.user?.firstName} ${session?.user?.lastName}`) || ""}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => {router.push("/profile")}} >Profile</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => signOut()}>Sign out</DropdownMenuItem>

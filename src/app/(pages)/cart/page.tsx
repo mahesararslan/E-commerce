@@ -3,7 +3,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { motion } from 'framer-motion'
 import { ShoppingCart, Trash2 } from 'lucide-react'
-import { CartItem, CartItemCustom } from "@/components/CartItem"
+import { CartItem, CartItemCustom, CartItemSkeleton } from "@/components/CartItem"
 import { Button } from "@/components/ui/button"
 import { useFetchProducts } from '@/hooks/useFetchProducts'
 import { useFetchCart } from '@/hooks/useFetchCart'
@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { clearCartAsync, removeFromCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
+import { useSession } from 'next-auth/react'
 
 interface CartItem {
     id: string
@@ -27,6 +28,7 @@ interface CartItem {
   }
 
 export default function CartPage() {
+    const { data: session } = useSession();
     const router = useRouter();
     const { cart, loading: isLoading } = useFetchCart();
     const { products, loading} = useFetchProducts();
@@ -95,8 +97,14 @@ export default function CartPage() {
         }
       }
 
+      useEffect(() => {
+        if (!session?.user) {
+          router.push('/signin');
+        }
+      }, [session, router]);
+
       if(loading || isLoading) {
-        return <div>Loaing...</div>
+        return <CartPageSkeleton />
       }
 
     return (
@@ -169,5 +177,32 @@ export default function CartPage() {
     )
 }
 
-
+// skeleton
+export function CartPageSkeleton() {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-grow">
+          <section className="py-16 bg-gradient-to-b from-background to-muted">
+            <div className="container mx-auto px-4">
+              <h1 className="text-4xl md:text-5xl font-bold text-center mb-12">Your Cart</h1>
+              <div className="space-y-4">
+                {[...Array(3)].map((_, index) => (
+                  <div key={index}>
+                    <CartItemSkeleton />
+                  </div>
+                ))}
+                <div className="mt-8 flex flex-col items-end">
+                  <div className="flex items-center justify-between w-full py-6"></div>
+                  <div className="w-full flex items-center flex-col sm:flex-row justify-center gap-3 mt-8">
+                    <div className="rounded-full py-4 w-full max-w-[280px]  flex items-center bg-teal-50 justify-center"></div>
+                    <div className="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-cyan-600"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    )
+  }
 

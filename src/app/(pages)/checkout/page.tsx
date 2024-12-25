@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast'
 import { Toaster } from '@/components/ui/toaster'
 import { setCart } from '@/store/slices/cartSlice'
 import { setOrder } from '@/store/slices/orderSlice'
+import { useSession } from 'next-auth/react'
 
 interface CheckoutFormData {
   name: string
@@ -41,7 +42,8 @@ interface CartItem {
 
 
 export default function CheckoutPage() {
-  const router = useRouter()
+  const { data: session } = useSession();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { cart } = useFetchCart();
   const { products } = useFetchProducts();
@@ -123,6 +125,15 @@ export default function CheckoutPage() {
       router.push("/payment")
     }
     setIsSubmitting(false)
+  }
+
+  if(!session?.user) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center">
+        <h1 className="text-3xl font-semibold">You need to be logged in to checkout</h1>
+        <Button onClick={() => router.push('/signin')} className="mt-4 px-10 hover:scale-110">Login</Button>
+      </div>
+    )
   }
 
   return (

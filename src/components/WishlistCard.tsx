@@ -118,3 +118,34 @@ export function WishlistCard({ id, name, price, salePrice, images, onRemove, onA
   )
 }
 
+// skeleton
+export function WishlistCardSkeleton() {
+  
+  return (
+    <div className="bg-card text-card-foreground rounded-lg shadow-md overflow-hidden dark:border-2 dark:border-gray-600">
+      <div className="p-4">
+        <div className="animate-pulse flex items-start mb-4">
+          <div className="flex-grow">
+            <h3 className="font-medium text-lg mb-1">Product Name</h3>
+            <div>
+              <div className="text-primary font-bold">$0.00</div>
+              <div className="text-sm text-muted-foreground line-through ml-2">$0.00</div>
+            </div>
+          </div>
+          <div className="w-20 h-20 bg-gray-300 rounded-md ml-4"></div>
+        </div>
+        <div className="flex justify-between items-center">
+          <div className="w-1/2">
+            <div className="w-20 h-8 bg-gray-300 rounded-md"></div>
+          </div>
+          <div className="w-1/2">
+            <div className="w-8 h-8 bg-gray-300 rounded-md"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+}
+
+

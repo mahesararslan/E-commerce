@@ -14,6 +14,9 @@ import { useFetchCart } from '@/hooks/useFetchCart'
 import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
 import { useToast } from '@/hooks/use-toast'
 import { Toaster } from './ui/toaster'
+import { useSession } from 'next-auth/react'
+import { Sign } from 'crypto'
+import { SignInPopup } from './SigninPopup'
 
 interface ProductInfoProps {
   product: {
@@ -34,12 +37,20 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const dispatch = useDispatch();
   const { toast } = useToast();
+  const { data: isSession } = useSession();
+  const [showSignInPopup, setShowSignInPopup] = useState(false);
 
   useEffect(() => {
     setIsWishlisted(wishlist.includes(product._id));
   }, [wishlist, product._id]);
 
   const addsToWishlist = async () => {
+
+    if(!isSession?.user?.email) {
+      setShowSignInPopup(true);
+      return;
+    }
+
     try { // @ts-ignore
       dispatch(addToWishlistAsync(product._id));
     } catch (error) {
@@ -48,6 +59,12 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
   };
 
   const removesFromWishlist = async () => {
+
+    if(!isSession?.user?.email) {
+      setShowSignInPopup(true);
+      return;
+    }
+
     try { // @ts-ignore 
       dispatch(removeFromWishlistAsync(product._id));
     } catch (error) {
@@ -57,6 +74,12 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
 
   const toggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent Link navigation
+
+    if (!isSession?.user?.email) {
+      setShowSignInPopup(true);
+      return;
+    }
+
     if (isWishlisted) {
       removesFromWishlist();
     } else {
@@ -70,6 +93,12 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
   const addToCart = async (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
+
+      if (!session?.user?.email) {
+        setShowSignInPopup(true);
+        return;
+      }
+
       try { // @ts-ignore
         if (cart.length !== 0 && session?.user?.email) {
           const cartItem = cart.find((item) => item.productId === product._id);
@@ -131,6 +160,7 @@ export function ProductInfo({ product, session }: ProductInfoProps) {
         </Button>
       </div>
       <Toaster />
+      <SignInPopup isOpen={showSignInPopup} onClose={() => setShowSignInPopup(false)} />
     </div>
   )
 }

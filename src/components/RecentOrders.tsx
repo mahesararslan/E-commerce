@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import { useEffect, useState } from "react";
 import axios from "axios"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 interface Order {
   _id: string
@@ -17,9 +19,19 @@ interface Order {
 export function RecentOrders() {
   const [orders, setOrders] = useState<Order []>([]);
   const [loading, setLoading] = useState(true);
+  const { data: session } = useSession()
+    const router = useRouter()
+  
+    useEffect(() => {
+      if(!session?.user?.email) {
+        router.push('/signin')
+        return;
+      }
+    }, [session])
 
   useEffect(() => {
     const fetchOrders = async () => {
+      if(!session?.user?.email) return;
       const response = await axios.get('/api/orders')
       setOrders(response.data.orders)
       setLoading(false)

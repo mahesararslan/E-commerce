@@ -63,17 +63,17 @@ export const authOptions: NextAuthOptions = {
                   return false;
               }
               // console.log(profile.email);
-              console.log("User: ", user);
-              console.log("Profile: ", profile);
+              // console.log("User: ", user);
+              // console.log("Profile: ", profile);
 
               try {
                 await mongooseConnect();
                 // logic to check if user exists in db and if not, create a new user
                 const existingUser = await User.findOne({ email: user.email });
-                console.log("Existing user:", existingUser);
+                // console.log("Existing user:", existingUser);
 
                 if (!existingUser) {
-                  console.log("User does not exist in the database. Creating a new user...");
+                  // console.log("User does not exist in the database. Creating a new user...");
                   const newUser = await User.create({ // @ts-ignore
                     firstName: profile.given_name || "", // @ts-ignore
                     lastName: profile.family_name || "",
@@ -82,7 +82,7 @@ export const authOptions: NextAuthOptions = {
                     image: user.image,
                     verified: true,
                   });
-                  console.log("New user created:", newUser);
+                  // console.log("New user created:", newUser);
                 }
 
                 return true;

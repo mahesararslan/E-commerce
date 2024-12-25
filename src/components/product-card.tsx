@@ -12,6 +12,8 @@ import { useDispatch } from 'react-redux'
 import { addToWishlist, addToWishlistAsync, removeFromWishlist, removeFromWishlistAsync } from '@/store/slices/wishlistSlice'
 import { useFetchCart } from '@/hooks/useFetchCart'
 import { addToCartAsync, updateQuantityAsync } from '@/store/slices/cartSlice'
+import { Sign } from 'crypto'
+import { SignInPopup } from './SigninPopup'
 
 interface ProductCardProps {
   id: string
@@ -22,13 +24,14 @@ interface ProductCardProps {
   rating: number
 }
 
-export function ProductCard({ id, name, price, salePrice, images, rating }: any) {
+export function ProductCard({ id, name, price, salePrice, images, rating, setShowSignInPopup }: any) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const { data: session } = useSession();
   const { wishlist, loading } = useFetchWishlist()
   const { cart } = useFetchCart();
   const dispatch = useDispatch();
   const [isWishlisted, setIsWishlisted] = useState(false);
+  
   
     useEffect(() => {
       if(wishlist.length !== 0 && session?.user?.email) {
@@ -37,6 +40,7 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
     }, [wishlist, id]);
   
     const addsToWishlist = async () => {
+
       try { // @ts-ignore
          // @ts-ignore
         dispatch(addToWishlistAsync(id));
@@ -56,6 +60,12 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
     const toggleWishlist = (e: React.MouseEvent) => {
       e.preventDefault(); // Prevent Link navigation
       e.stopPropagation();
+
+      if (!session?.user?.email) {
+        setShowSignInPopup(true);
+        return;
+      }
+
       if (isWishlisted) {
         removesFromWishlist();
       } else {
@@ -67,6 +77,12 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
       const addToCart = async (event: React.MouseEvent) => {
         event.preventDefault();
         event.stopPropagation();
+
+        if (!session?.user?.email) {
+          setShowSignInPopup(true);
+          return;
+        }
+
         try { // @ts-ignore
           if (cart.length !== 0 && session?.user?.email) {
             const cartItem = cart.find((item) => item.productId === id);
@@ -163,7 +179,29 @@ export function ProductCard({ id, name, price, salePrice, images, rating }: any)
           Add to Cart
         </Button>
       </div>
+      
     </motion.div>
   )
 }
 
+// skeleton
+export function ProductCardSkeleton() {
+  return (
+    <div className="bg-card text-card-foreground rounded-lg shadow-lg border-t-2 dark:border-t-0 border-gray-100 overflow-hidden flex flex-col">
+      <div className="relative aspect-square flex items-center justify-center h-[200px] bg-gray-200 animate-pulse">
+        <div className="w-3/4 h-3/4 bg-gray-300 rounded-lg"></div>
+      </div>
+      <div className="p-4 flex-grow">
+        <div className="h-4 bg-gray-300 w-3/4 mb-2 animate-pulse"></div>
+        <div className="flex items-center mb-2">
+          <div className="h-4 bg-gray-300 w-1/4 animate-pulse"></div>
+          <div className="h-4 bg-gray-300 w-1/4 ml-2 animate-pulse"></div>
+        </div>
+        <div className="h-4 bg-gray-300 w-1/2 animate-pulse"></div>
+      </div>
+      <div className="p-4 bg-muted/50 flex justify-between">
+        <div className="h-10 w-1/2 bg-gray-300 animate-pulse"></div>
+      </div>
+    </div>
+  )
+}
