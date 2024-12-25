@@ -136,7 +136,7 @@ export default function WishlistPage() {
 }
 
 // skeleton
-export function WishlistPageSkeleton() {
+function WishlistPageSkeleton() {
   return (
     <div className="min-h-screen flex flex-col bg-muted dark:bg-background">
       <main className="flex-grow">

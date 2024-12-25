@@ -5,12 +5,14 @@ import { useFetchProducts } from "@/hooks/useFetchProducts";
 import { motion } from "framer-motion";
 import { ProductCard } from "@/components/product-card";
 import { useSearchParams } from "next/navigation";
+import { SignInPopup } from "@/components/SigninPopup";
 
 function SearchPageContent() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q");
   const { products, loading } = useFetchProducts();
   const [filteredProducts, setFilteredProducts] = useState(products);
+  const [showSignInPopup, setShowSignInPopup] = useState(false);
 
   useEffect(() => {
     if (searchQuery && products.length > 0) {
@@ -54,6 +56,7 @@ function SearchPageContent() {
                       salePrice={product.salePrice}
                       images={product.images}
                       rating={product.rating}
+                      setShowSignInPopup={setShowSignInPopup}
                     />
                   </motion.div>
                 ))}
@@ -62,6 +65,7 @@ function SearchPageContent() {
           </div>
         </section>
       </main>
+      <SignInPopup isOpen={showSignInPopup} onClose={() => setShowSignInPopup(false)} />
     </div>
   );
 }

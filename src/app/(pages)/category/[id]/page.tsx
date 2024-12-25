@@ -138,7 +138,7 @@ export default function CategoryPage() {
 }
 
 // skeleton
-export function CategoryPageSkeleton() {
+function CategoryPageSkeleton() {
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
