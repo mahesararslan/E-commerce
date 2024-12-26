@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { CheckCircle } from 'lucide-react';
@@ -13,7 +12,6 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
-import { useSession } from 'next-auth/react';
 
 interface Order {
 
@@ -22,8 +20,8 @@ interface Order {
 export default function PaymentSuccessPage() {
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState<any>();
-  const { data: session } = useSession();
-  const router = useRouter();
+  // const { data: session } = useSession();
+  // const router = useRouter();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -45,11 +43,11 @@ export default function PaymentSuccessPage() {
     });
   }, [toast]);
 
-  useEffect(() => {
-    if (!session?.user) {
-      router.push('/signin');
-    }
-  }, [session, router]);
+  // useEffect(() => {
+  //   if (!session?.user) {
+  //     router.push('/signin');
+  //   }
+  // }, [session, router]);
 
   if (loading) {
     return <OrderDetailsCardSkeleton />;

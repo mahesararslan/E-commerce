@@ -136,6 +136,15 @@ export default function CheckoutPage() {
     )
   }
 
+  if(!cartItems.length) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center">
+        <h1 className="text-3xl font-semibold">Your cart is empty</h1>
+        <Button onClick={() => router.push('/products')} className="mt-4 px-10 hover:scale-110 text-white font-semibold">Go Shopping</Button>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">

@@ -65,8 +65,13 @@ export default function PaymentPage() {
           )
         }
 
-        if(!amount) {
-            return <div>Loading...</div>
+        if(!amount && cartItems.length === 0) {
+          return (
+            <div className="min-h-screen flex flex-col justify-center items-center">
+              <h1 className="text-3xl font-semibold">Your cart is empty</h1>
+              <Button onClick={() => router.push('/')} className="mt-4 px-10 hover:scale-110 text-white font-semibold">Go shopping</Button>
+            </div>
+          )
         }
 
     return (
