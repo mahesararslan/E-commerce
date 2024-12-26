@@ -21,7 +21,7 @@ interface Product {
   rating: number;
 }
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 8;
 
 export default function AllProductsPage() {
   const { products: fetchedProducts, loading } = useFetchProducts(); // Fetch products

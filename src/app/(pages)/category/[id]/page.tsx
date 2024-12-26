@@ -12,7 +12,7 @@ import { useIntersectionObserver } from "@/hooks/useIntersectionObserver"
 import { ProductFilters, ProductFiltersSkeleton } from '@/components/ProductFilters'
 import { SignInPopup } from '@/components/SigninPopup'
 
-const ITEMS_PER_PAGE = 6
+const ITEMS_PER_PAGE = 8
 
 export default function CategoryPage() {
   const { id } = useParams()
