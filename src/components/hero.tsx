@@ -50,7 +50,7 @@ export function Hero() {
 
   return (
     <section
-      className="h-screen sm:h-fit  relative lg:py-48 py-32 lg:overflow-hidden bg-cover bg-center bg-no-repeat"
+      className="h-[80%] sm:h-fit  relative lg:py-48 py-32 lg:overflow-hidden bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${img.src})` }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
