@@ -59,7 +59,7 @@ export function ReviewSection({ productId, session }: ReviewSectionProps) {
       const response = await axios.post('/api/review', {
         productId,
         // @ts-ignore
-        userName: session.user.name,
+        userName: session.user.name || session.user.firstName,
         rating: newReview.rating,
         review: newReview.review,
       });
@@ -69,12 +69,13 @@ export function ReviewSection({ productId, session }: ReviewSectionProps) {
         ...response.data.newReview,
         createdAt: new Date().toISOString(),
       };
-      setReviews((prevReviews) => [newReviewWithDate, ...prevReviews]);
+      setReviews((reviews) => [newReviewWithDate, ...reviews]);
       setNewReview({ rating: 0, review: '' }); // Reset the form
     } catch (error) {
       console.error('Error submitting review:', error);
     }
   };
+
 
   if (isLoading) {
     return <ReviewSectionSkeleton />;
@@ -166,7 +167,10 @@ export function StarRating({ rating, editable = false, onChange }: StarRatingPro
       {[...Array(5)].map((_, i) => {
         if (editable) {
           return (
-            <button  key={i} onClick={() => onChange && onChange(i + 1)}>
+            <button  key={i} onClick={(e:React.MouseEvent) => {
+              e.preventDefault()
+              onChange && onChange(i + 1)
+              }}>
               {i < fullStars ? <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" /> : i === fullStars && hasHalfStar ? <StarHalf className="w-4 h-4 fill-yellow-400 text-yellow-400" /> : <Star className="w-4 h-4 text-gray-300" />}
             </button>
           )

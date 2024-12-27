@@ -33,15 +33,9 @@ export async function POST(req: NextRequest) {
                 $push: {
                     reviews: { userName, rating, review, createdAt: new Date() },
                 },
-            }
+            },
+            { new: true }
         );
-
-        console.log("Product: ", product);
-
-
-        // update average rating
-        
-        
 
         if (!product) {
             return NextResponse.json({
@@ -50,10 +44,13 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        // @ts-ignore
+        console.log("REVIEWS: ", product.reviews);
 
+        // return the newly added review
+        const newReview = product.reviews[product.reviews.length - 1];
+        console.log("NEW REVIEW: ",newReview);
 
-        // Update the average rating in the product
+        // @ts-ignore // Calculate the new average rating
         const totalRating = product.reviews.reduce((acc, review) => acc + review.rating, 0);
         product.rating = totalRating / product.reviews.length;
         await product.save();
@@ -61,7 +58,8 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
             status: 200,
             message: "Review added successfully",
-            reviews: product.reviews, // Updated reviews array
+            reviews: product.reviews.splice(0, product.reviews.length - 1), // send all reviews except the newly added one
+            newReview,
         });
     } catch (error) {
         console.error(error);
