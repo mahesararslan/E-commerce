@@ -163,11 +163,11 @@ export function ProductCard({ id, name, price, salePrice, images, rating, setSho
         <div className="mt-2">
           {salePrice ? (
             <div className="flex items-center">
-              <span className="text-lg font-bold text-primary mr-2">${salePrice.toFixed(2)}</span>
+              <span className="text-lg font-bold text-cyan-600 dark:text-cyan-500 mr-2">${salePrice.toFixed(2)}</span>
               <span className="text-sm text-muted-foreground line-through">${price.toFixed(2)}</span>
             </div>
           ) : (
-            <span className="text-lg font-bold text-cyan-400">${price.toFixed(2)}</span>
+            <span className="text-lg font-bold text-cyan-600 dark:text-cyan-500">${price.toFixed(2)}</span>
           )}
         </div>
       </div>
