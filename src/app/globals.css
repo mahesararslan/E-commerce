@@ -89,7 +89,9 @@
     }
 
     .animate-scroll {
-      animation: scroll 10s linear infinite;
+      display: flex;
+      gap: 1.5rem; /* Adjust spacing */
+      animation: scroll 15s linear infinite;
     }
 
     @keyframes fade-up {
@@ -132,7 +134,7 @@
         transform: translateX(0);
       }
       100% {
-        transform: translateX(-50%);
+        transform: translateX(calc(-50% - 1.5rem)); /* Adjust for the gap between items */
       }
     }
 
@@ -173,6 +175,19 @@
       animation: fadeIn 0.5s ease-in-out;
     }
   
+
+    .animate-infinite-scroll {
+      animation: infinite-scroll var(--animation-duration) linear infinite;
+    }
+  
+    @keyframes infinite-scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-1 * var(--scroll-width) / 2));
+      }
+    }
   
   }
 
