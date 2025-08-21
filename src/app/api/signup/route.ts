@@ -36,9 +36,9 @@ export async function POST(req: NextRequest) {
             password: hashedPassword,
         })
 
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ""; // Adjust for your environment
-        console.log("Base URL:", baseUrl);
-        await axios.post(`${baseUrl}/api/send-otp`, { email });
+        // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ""; // Adjust for your environment
+        // console.log("Base URL:", baseUrl);
+        // await axios.post(`${baseUrl}/api/send-otp`, { email });
 
         return new NextResponse("Signed up successfully", { status: 200 });
     }

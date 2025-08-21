@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation'
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false)
+  const { reset } = useForm<SignUpSchema>()
   const { register, handleSubmit, formState: { errors } } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
   })
@@ -39,7 +40,17 @@ export default function SignUp() {
 
     console.log(data)
     setIsLoading(false)
-    router.push(`/verify-otp/${data.email}`)
+    // clear all fields
+    reset();
+
+    toast({
+      title: "Sign Up Successful",
+      description: "Please Signin to continue.",
+    })
+    // router.push(`/verify-otp/${data.email}`)
+    setTimeout(() => {
+        router.push('/signin')
+      }, 2000)
   }
 
   return (
